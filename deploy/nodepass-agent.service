@@ -1,0 +1,20 @@
+[Unit]
+Description=NodePass Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/nodepass-agent
+ExecStart=/opt/nodepass-agent/bin/nodepass-agent --config /opt/nodepass-agent/agent.conf --workdir /opt/nodepass-agent
+Restart=on-failure
+RestartSec=5s
+KillMode=process
+TimeoutStopSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nodepass-agent
+
+[Install]
+WantedBy=multi-user.target

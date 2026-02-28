@@ -26,7 +26,7 @@ seed:
 	bash scripts/seed-admin.sh
 
 shellcheck:
-	shellcheck deploy/setup.sh deploy/upgrade.sh scripts/*.sh
+	shellcheck deploy/setup.sh deploy/upgrade.sh scripts/*.sh tests/e2e/*.sh
 
 # Hub backend
 hub-build:

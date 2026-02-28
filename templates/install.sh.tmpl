@@ -12,9 +12,11 @@ DEPLOY_PROGRESS_URL="{{ .DeployProgressURL }}"
 INSTALL_SCRIPT_URL="{{ .InstallScriptURL }}"
 
 INSTALL_DIR="/opt/nodepass-agent"
-BINARY_PATH="${INSTALL_DIR}/nodepass-agent"
+BINARY_PATH="${INSTALL_DIR}/bin/nodepass-agent"
+CONFIG_PATH="${INSTALL_DIR}/agent.conf"
 SERVICE_PATH="/etc/systemd/system/nodepass-agent.service"
 SERVICE_NAME="nodepass-agent"
+MASTER_PORT="${MASTER_PORT:-9090}"
 
 report_progress() {
   local step="$1"
@@ -80,7 +82,14 @@ verify_checksum() {
 }
 
 build_download_url() {
-  local file_name="nodepass-agent-${AGENT_VERSION}-linux-${ARCH}"
+  local normalized_arch="${ARCH}"
+  case "${normalized_arch}" in
+    armv7|arm/v7|arm) normalized_arch="armv7" ;;
+    aarch64) normalized_arch="arm64" ;;
+    x86_64) normalized_arch="amd64" ;;
+  esac
+
+  local file_name="nodepass-agent-${AGENT_VERSION}-linux-${normalized_arch}"
   echo "${DOWNLOAD_BASE_URL%/}/${file_name}"
 }
 
@@ -88,7 +97,7 @@ install_binary() {
   local download_url
   download_url="$(build_download_url)"
 
-  mkdir -p "${INSTALL_DIR}"
+  mkdir -p "${INSTALL_DIR}/bin"
   report_progress "download_binary" 20 "downloading agent binary"
 
   curl -fL -C - "${download_url}" -o "${BINARY_PATH}"
@@ -97,8 +106,35 @@ install_binary() {
   report_progress "binary_ready" 40 "agent binary downloaded"
 }
 
+write_base_config() {
+  report_progress "write_config" 50 "writing base agent config"
+
+  cat > "${CONFIG_PATH}" <<CONFIG
+# NodePass Agent configuration
+[agent]
+agent_id = ${AGENT_ID}
+panel_url = ${HUB_WS_URL}
+deploy_token = ${AGENT_TOKEN}
+connect_addr =
+egress_network =
+
+[nodepass]
+# Filled by agent automatically on first start.
+DEPLOY_DEFAULT_MASTER_ADDR =
+DEPLOY_DEFAULT_MASTER_API_KEY =
+master_port = ${MASTER_PORT}
+start_timeout = 30
+
+[panel]
+heartbeat_interval = 30
+command_timeout = 30
+CONFIG
+
+  chmod 600 "${CONFIG_PATH}"
+}
+
 write_service_file() {
-  report_progress "write_service" 55 "writing systemd service"
+  report_progress "write_service" 65 "writing systemd service"
 
   cat > "${SERVICE_PATH}" <<SERVICE
 [Unit]
@@ -110,29 +146,52 @@ Wants=network-online.target
 Type=simple
 User=root
 WorkingDirectory=${INSTALL_DIR}
-Environment="AGENT_ID=${AGENT_ID}"
-Environment="AGENT_TOKEN=${AGENT_TOKEN}"
-Environment="AGENT_AUTH_TOKEN=${AGENT_AUTH_TOKEN}"
-Environment="HUB_WS_URL=${HUB_WS_URL}"
-ExecStart=${BINARY_PATH}
-Restart=always
-RestartSec=5
-LimitNOFILE=65535
+ExecStart=${BINARY_PATH} --config ${CONFIG_PATH} --workdir ${INSTALL_DIR}
+Restart=on-failure
+RestartSec=5s
+KillMode=process
+TimeoutStopSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nodepass-agent
 
 [Install]
 WantedBy=multi-user.target
 SERVICE
 
-  report_progress "service_written" 70 "systemd service file created"
+  report_progress "service_written" 80 "systemd service file created"
+}
+
+wait_for_credentials() {
+  local timeout=60
+  local elapsed=0
+  local addr=""
+  local key=""
+
+  while [[ "${elapsed}" -lt "${timeout}" ]]; do
+    addr="$(grep '^DEPLOY_DEFAULT_MASTER_ADDR' "${CONFIG_PATH}" | awk -F= '{print $2}' | tr -d '[:space:]' || true)"
+    key="$(grep '^DEPLOY_DEFAULT_MASTER_API_KEY' "${CONFIG_PATH}" | awk -F= '{print $2}' | tr -d '[:space:]' || true)"
+    if [[ -n "${addr}" && -n "${key}" ]]; then
+      report_progress "credentials_ready" 95 "credentials written to agent.conf"
+      return 0
+    fi
+
+    sleep 2
+    elapsed=$((elapsed + 2))
+  done
+
+  echo "credentials not written within ${timeout}s" >&2
+  echo "check logs: journalctl -u ${SERVICE_NAME} -n 50" >&2
+  return 1
 }
 
 start_service() {
-  report_progress "start_service" 80 "starting service"
+  report_progress "start_service" 85 "starting service"
 
   systemctl daemon-reload
   systemctl enable --now "${SERVICE_NAME}"
 
-  report_progress "wait_connected" 90 "service started, waiting websocket connection"
+  report_progress "wait_connected" 90 "service started, waiting for credentials"
 }
 
 main() {
@@ -140,8 +199,11 @@ main() {
   verify_checksum
   report_progress "prepare" 5 "prepare installation"
   install_binary
+  write_base_config
   write_service_file
   start_service
+  wait_for_credentials
+  report_progress "done" 100 "installation completed"
 }
 
 main "$@"

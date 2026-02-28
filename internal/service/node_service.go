@@ -1002,7 +1002,7 @@ func deriveHubWSURLFromDownloadBaseURL(downloadBaseURL string) string {
 
 	parsed.RawQuery = ""
 	parsed.Fragment = ""
-	parsed.Path = "/ws"
+	parsed.Path = "/ws/agent"
 	return parsed.String()
 }
 
