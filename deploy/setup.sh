@@ -318,11 +318,59 @@ detect_repo_slug() {
 
 validate_domain() {
   local candidate="$1"
-  [[ "${candidate}" =~ ^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$ ]]
+  if [[ -z "${candidate}" ]]; then
+    return 1
+  fi
+
+  if [[ "${candidate}" == "localhost" ]]; then
+    return 0
+  fi
+
+  if is_ipv4 "${candidate}"; then
+    return 0
+  fi
+
+  [[ "${candidate}" =~ ^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)(\.([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?))*$ ]]
+}
+
+is_ipv4() {
+  local candidate="$1"
+  local octet
+  if [[ ! "${candidate}" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+    return 1
+  fi
+
+  IFS='.' read -r -a octets <<< "${candidate}"
+  if [[ "${#octets[@]}" -ne 4 ]]; then
+    return 1
+  fi
+
+  for octet in "${octets[@]}"; do
+    if (( octet < 0 || octet > 255 )); then
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+is_public_fqdn() {
+  local candidate="$1"
+  [[ "${candidate}" =~ ^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}$ ]]
 }
 
 check_domain_dns() {
   local domain_name="$1"
+
+  if [[ "${domain_name}" == "localhost" ]] || is_ipv4 "${domain_name}"; then
+    log_warn "检测到本地/内网地址（${domain_name}），将跳过 DNS 校验。生产环境建议使用公网域名。"
+    return
+  fi
+
+  if ! is_public_fqdn "${domain_name}"; then
+    log_warn "当前输入不是标准公网域名（${domain_name}），将跳过 DNS 校验。"
+    return
+  fi
 
   if ! command -v dig >/dev/null 2>&1; then
     log_warn "未检测到 dig，跳过 DNS 校验"
@@ -382,13 +430,16 @@ configure_env() {
 
   echo -e "${BOLD}── 基础配置 ────────────────────${NC}"
   while true; do
-    read -r -p "域名（如 hub.example.com）: " DOMAIN
+    read -r -p "域名（公网域名；测试可填 localhost 或 IP）: " DOMAIN
     DOMAIN="${DOMAIN// /}"
     if validate_domain "${DOMAIN}"; then
       break
     fi
     log_warn "域名格式不正确，请重新输入"
   done
+  if ! is_public_fqdn "${DOMAIN}"; then
+    log_warn "当前输入不是公网域名，HTTPS 证书自动签发可能不可用（仅建议测试环境使用）"
+  fi
   check_domain_dns "${DOMAIN}"
 
   local db_password
