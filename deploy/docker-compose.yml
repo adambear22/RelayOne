@@ -1,5 +1,3 @@
-version: '3.8'
-
 x-logging: &default-logging
   logging:
     driver: json-file
@@ -33,6 +31,9 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
       NODEPASS_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
+      NODEPASS_SECURITY_AGENT_HMAC_SECRET_FILE: /run/secrets/agent_hmac_secret
+    secrets:
+      - agent_hmac_secret
     depends_on:
       postgres:
         condition: service_healthy
@@ -96,6 +97,7 @@ services:
       DOMAIN: ${DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./downloads:/srv/downloads:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

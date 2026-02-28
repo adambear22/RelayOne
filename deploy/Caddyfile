@@ -1,4 +1,10 @@
-{env.DOMAIN} {
+{$DOMAIN} {
+  # Agent binary downloads
+  handle_path /downloads/* {
+    root * /srv/downloads
+    file_server
+  }
+
   # SSE 专用配置（禁用缓冲）
   handle /api/v1/events {
     reverse_proxy hub:8080 {

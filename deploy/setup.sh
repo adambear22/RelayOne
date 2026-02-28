@@ -244,7 +244,7 @@ install_compose() {
 }
 
 setup_deploy_dir() {
-  mkdir -p "${INSTALL_DIR}"/{secrets,backups,logs}
+  mkdir -p "${INSTALL_DIR}"/{secrets,backups,logs,downloads}
   chmod 700 "${INSTALL_DIR}/secrets"
   log_ok "部署目录已准备: ${INSTALL_DIR}"
 }
@@ -579,6 +579,9 @@ configure_env() {
   local repo_slug repo_owner latest_release default_version target_version
   repo_slug="$(detect_repo_slug)"
   repo_owner="${repo_slug%%/*}"
+  if [[ -z "${repo_owner}" || "${repo_owner}" == "${repo_slug}" ]]; then
+    repo_owner="adambear22"
+  fi
   latest_release="latest"
   if [[ -n "${repo_slug}" && "${repo_slug}" != *"<"* ]]; then
     latest_release="$(curl -sf "https://api.github.com/repos/${repo_slug}/releases/latest" | jq -r '.tag_name' 2>/dev/null || echo "latest")"
@@ -685,6 +688,75 @@ generate_secrets() {
   fi
 }
 
+extract_agent_binary() {
+  local image_ref="$1"
+  local platform="$2"
+  local target_path="$3"
+  local container_id tmp_binary
+
+  tmp_binary="$(mktemp)"
+  container_id="$(docker create --platform "${platform}" "${image_ref}")" || {
+    rm -f "${tmp_binary}"
+    return 1
+  }
+
+  if ! docker cp "${container_id}:/nodepass-agent" "${tmp_binary}" >/dev/null 2>&1; then
+    docker rm "${container_id}" >/dev/null 2>&1 || true
+    rm -f "${tmp_binary}"
+    return 1
+  fi
+
+  docker rm "${container_id}" >/dev/null 2>&1 || true
+  chmod 755 "${tmp_binary}"
+  mv "${tmp_binary}" "${target_path}"
+  return 0
+}
+
+prepare_agent_downloads() {
+  local agent_image agent_version image_ref downloads_dir
+  local target_amd64 target_arm64 target_armv7
+  local any_success=0
+
+  agent_image="$(get_env_var AGENT_IMAGE)"
+  agent_version="$(get_env_var AGENT_VERSION)"
+  if [[ -z "${agent_image}" || -z "${agent_version}" ]]; then
+    log_error "缺少 AGENT_IMAGE 或 AGENT_VERSION，无法准备 Agent 下载文件"
+    exit 1
+  fi
+
+  image_ref="${agent_image}:${agent_version}"
+  downloads_dir="${INSTALL_DIR}/downloads"
+  mkdir -p "${downloads_dir}"
+
+  target_amd64="${downloads_dir}/nodepass-agent-${agent_version}-linux-amd64"
+  if extract_agent_binary "${image_ref}" "linux/amd64" "${target_amd64}"; then
+    any_success=1
+  else
+    log_warn "未能提取 amd64 Agent 二进制（${image_ref}）"
+  fi
+
+  target_arm64="${downloads_dir}/nodepass-agent-${agent_version}-linux-arm64"
+  if extract_agent_binary "${image_ref}" "linux/arm64" "${target_arm64}"; then
+    any_success=1
+  else
+    log_warn "未能提取 arm64 Agent 二进制（${image_ref}）"
+  fi
+
+  target_armv7="${downloads_dir}/nodepass-agent-${agent_version}-linux-armv7"
+  if extract_agent_binary "${image_ref}" "linux/arm/v7" "${target_armv7}"; then
+    any_success=1
+  else
+    log_warn "未能提取 armv7 Agent 二进制（${image_ref}）"
+  fi
+
+  if [[ "${any_success}" -eq 0 ]]; then
+    log_error "未提取到任何 Agent 二进制，请检查镜像是否包含目标架构"
+    exit 1
+  fi
+
+  log_ok "Agent 下载文件已准备: ${downloads_dir}"
+}
+
 pull_images() {
   cd "${INSTALL_DIR}"
 
@@ -701,6 +773,7 @@ pull_images() {
 
   log_info "正在拉取镜像，请稍候..."
   compose pull --quiet
+  prepare_agent_downloads
   log_ok "所有镜像拉取完成"
   compose images || true
 }

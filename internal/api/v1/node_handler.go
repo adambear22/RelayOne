@@ -333,7 +333,8 @@ func (h *NodeHandler) GenerateInstallScript(c *gin.Context) {
 		return
 	}
 
-	script, err := h.nodeService.GenerateInstallScript(c.Request.Context(), nodeID, installToken)
+	requestBaseURL := resolveRequestBaseURL(c)
+	script, err := h.nodeService.GenerateInstallScript(c.Request.Context(), nodeID, installToken, requestBaseURL)
 	if err != nil {
 		handleNodeServiceError(c, err)
 		return
@@ -343,6 +344,33 @@ func (h *NodeHandler) GenerateInstallScript(c *gin.Context) {
 	c.Header("Content-Type", "text/x-shellscript")
 	c.Header("Content-Disposition", "attachment; filename=\""+fileName+"\"")
 	c.String(http.StatusOK, script)
+}
+
+func resolveRequestBaseURL(c *gin.Context) string {
+	scheme := strings.TrimSpace(c.GetHeader("X-Forwarded-Proto"))
+	if comma := strings.Index(scheme, ","); comma >= 0 {
+		scheme = strings.TrimSpace(scheme[:comma])
+	}
+	if scheme == "" {
+		if c.Request.TLS != nil {
+			scheme = "https"
+		} else {
+			scheme = "http"
+		}
+	}
+
+	host := strings.TrimSpace(c.GetHeader("X-Forwarded-Host"))
+	if comma := strings.Index(host, ","); comma >= 0 {
+		host = strings.TrimSpace(host[:comma])
+	}
+	if host == "" {
+		host = strings.TrimSpace(c.Request.Host)
+	}
+	if host == "" {
+		return ""
+	}
+
+	return scheme + "://" + host
 }
 
 // TestTCPConnectivity

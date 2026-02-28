@@ -14,11 +14,14 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 	"syscall"
 	"time"
@@ -710,12 +713,31 @@ func runMigrateCommand() error {
 		return fmt.Errorf("load config failed: %w", err)
 	}
 
-	migrationSource := "file:///migrations"
-	if _, statErr := os.Stat("/migrations"); statErr != nil {
-		migrationSource = "file://./migrations"
+	migrationDir := "/migrations"
+	if _, statErr := os.Stat(migrationDir); statErr != nil {
+		migrationDir = "./migrations"
 	}
 
-	migrator, err := migrate.New(migrationSource, cfg.Database.URL)
+	migrationSource := "file://" + migrationDir
+	if err := runMigrateUp(migrationSource, cfg.Database.URL); err != nil {
+		normalizedDir, normalizeErr := normalizeMigrationDir(migrationDir)
+		if normalizeErr != nil {
+			return fmt.Errorf("run migrations failed: %w", err)
+		}
+		defer os.RemoveAll(normalizedDir)
+
+		normalizedSource := "file://" + normalizedDir
+		if retryErr := runMigrateUp(normalizedSource, cfg.Database.URL); retryErr != nil {
+			return fmt.Errorf("run migrations failed: %w; fallback failed: %v", err, retryErr)
+		}
+	}
+
+	fmt.Println("migrations applied successfully")
+	return nil
+}
+
+func runMigrateUp(sourceURL, databaseURL string) error {
+	migrator, err := migrate.New(sourceURL, databaseURL)
 	if err != nil {
 		return fmt.Errorf("init migrator failed: %w", err)
 	}
@@ -724,9 +746,74 @@ func runMigrateCommand() error {
 	if err := migrator.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return fmt.Errorf("run migrations failed: %w", err)
 	}
-
-	fmt.Println("migrations applied successfully")
 	return nil
+}
+
+func normalizeMigrationDir(srcDir string) (string, error) {
+	entries, err := os.ReadDir(srcDir)
+	if err != nil {
+		return "", fmt.Errorf("read migration dir failed: %w", err)
+	}
+
+	tmpDir, err := os.MkdirTemp("", "nodepass-migrations-*")
+	if err != nil {
+		return "", fmt.Errorf("create temp migration dir failed: %w", err)
+	}
+
+	vPattern := regexp.MustCompile(`^V([0-9]+)__(.+)\.(up|down)\.sql$`)
+	nPattern := regexp.MustCompile(`^([0-9]+)_(.+)\.(up|down)\.sql$`)
+
+	files := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+
+		name := entry.Name()
+		if vPattern.MatchString(name) || nPattern.MatchString(name) {
+			files = append(files, name)
+		}
+	}
+	sort.Strings(files)
+
+	if len(files) == 0 {
+		return "", errors.New("no migration files found")
+	}
+
+	for _, name := range files {
+		targetName := name
+		if match := vPattern.FindStringSubmatch(name); len(match) == 4 {
+			targetName = fmt.Sprintf("%s_%s.%s.sql", match[1], match[2], match[3])
+		}
+
+		srcPath := filepath.Join(srcDir, name)
+		dstPath := filepath.Join(tmpDir, targetName)
+		if err := copyFile(srcPath, dstPath); err != nil {
+			return "", fmt.Errorf("copy migration %s failed: %w", name, err)
+		}
+	}
+
+	return tmpDir, nil
+}
+
+func copyFile(srcPath, dstPath string) error {
+	src, err := os.Open(srcPath)
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	dst, err := os.Create(dstPath)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+
+	if _, err := io.Copy(dst, src); err != nil {
+		return err
+	}
+
+	return dst.Sync()
 }
 
 func runCreateAdminCommand(args []string) error {

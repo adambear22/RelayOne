@@ -9,9 +9,18 @@ if [[ -z "${TARGET_VERSION}" ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-ENV_FILE="${REPO_ROOT}/deploy/.env"
-COMPOSE_FILE="${REPO_ROOT}/deploy/docker-compose.yml"
+
+if [[ -f "${SCRIPT_DIR}/docker-compose.yml" ]]; then
+  DEPLOY_DIR="${SCRIPT_DIR}"
+elif [[ -f "${SCRIPT_DIR}/deploy/docker-compose.yml" ]]; then
+  DEPLOY_DIR="${SCRIPT_DIR}/deploy"
+else
+  echo "未找到 docker-compose.yml（期望路径：${SCRIPT_DIR}/docker-compose.yml）"
+  exit 1
+fi
+
+ENV_FILE="${DEPLOY_DIR}/.env"
+COMPOSE_FILE="${DEPLOY_DIR}/docker-compose.yml"
 
 if [[ ! -f "${ENV_FILE}" ]]; then
   echo "未找到 ${ENV_FILE}，请先初始化部署环境"
@@ -28,7 +37,7 @@ PREV_HUB_VERSION=$(grep -E '^HUB_VERSION=' "${ENV_FILE}" | head -1 | cut -d '=' 
 PREV_FRONTEND_VERSION=$(grep -E '^FRONTEND_VERSION=' "${ENV_FILE}" | head -1 | cut -d '=' -f2- || true)
 PREV_AGENT_VERSION=$(grep -E '^AGENT_VERSION=' "${ENV_FILE}" | head -1 | cut -d '=' -f2- || true)
 
-BACKUP_FILE="$(mktemp "${REPO_ROOT}/deploy/.env.backup.XXXXXX")"
+BACKUP_FILE="$(mktemp "${DEPLOY_DIR}/.env.backup.XXXXXX")"
 cp "${ENV_FILE}" "${BACKUP_FILE}"
 
 restore_env() {

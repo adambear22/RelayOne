@@ -243,7 +243,7 @@ func (s *NodeService) Create(ctx context.Context, ownerID string, req CreateNode
 	return response, nil
 }
 
-func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, installToken string) (string, error) {
+func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, installToken string, requestBaseURL string) (string, error) {
 	nodeUUID, err := uuid.Parse(nodeID)
 	if err != nil {
 		return "", ErrInvalidNodeID
@@ -262,40 +262,58 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 		return "", ErrInstallForbidden
 	}
 
-	cachedTokenAny, ok := s.installTokens.Load(nodeID)
-	if !ok {
-		return "", ErrInstallForbidden
-	}
-	cachedToken, ok := cachedTokenAny.(cachedInstallToken)
-	if !ok || cachedToken.Token == "" || !cachedToken.ExpiresAt.After(now) {
-		s.installTokens.Delete(nodeID)
+	trimmedInstallToken := strings.TrimSpace(installToken)
+	if trimmedInstallToken == "" {
 		return "", ErrInstallForbidden
 	}
 
-	if subtle.ConstantTimeCompare([]byte(strings.TrimSpace(installToken)), []byte(cachedToken.Token)) != 1 {
+	validInstallToken := false
+	if cachedTokenAny, ok := s.installTokens.Load(nodeID); ok {
+		cachedToken, castOK := cachedTokenAny.(cachedInstallToken)
+		if !castOK || cachedToken.Token == "" || !cachedToken.ExpiresAt.After(now) {
+			s.installTokens.Delete(nodeID)
+		} else if subtle.ConstantTimeCompare([]byte(trimmedInstallToken), []byte(cachedToken.Token)) == 1 {
+			validInstallToken = true
+		}
+	}
+
+	if !validInstallToken && strings.TrimSpace(node.Token) != "" {
+		if bcrypt.CompareHashAndPassword([]byte(node.Token), []byte(trimmedInstallToken)) == nil {
+			validInstallToken = true
+		}
+	}
+
+	if !validInstallToken {
 		return "", ErrInstallForbidden
 	}
 
-	downloadBaseURL, err := s.resolveDownloadBaseURL(ctx)
+	downloadBaseURL, err := s.resolveDownloadBaseURL(ctx, requestBaseURL)
 	if err != nil {
 		return "", err
 	}
 
 	hubWSURL := strings.TrimSpace(s.cfg.HubWSURL)
+	if hubWSURL == "" {
+		hubWSURL = deriveHubWSURLFromDownloadBaseURL(downloadBaseURL)
+	}
 	agentVersion := strings.TrimSpace(s.cfg.AgentVersion)
 	if agentVersion == "" {
 		agentVersion = nodeDefaultAgentVer
 	}
+	deployProgressURL := s.resolveDeployProgressURL()
+	if deployProgressURL == "" {
+		deployProgressURL = deriveDeployProgressURLFromHubWSURL(hubWSURL)
+	}
 
 	tmplData := installScriptTemplateData{
 		AgentID:           node.ID.String(),
-		AgentToken:        cachedToken.Token,
+		AgentToken:        trimmedInstallToken,
 		AgentAuthToken:    cryptoutil.GenerateAgentHMACToken(node.ID.String(), s.cfg.HMACSecret),
 		HubWSURL:          hubWSURL,
 		AgentVersion:      agentVersion,
 		Arch:              node.Arch,
 		DownloadBaseURL:   downloadBaseURL,
-		DeployProgressURL: s.resolveDeployProgressURL(),
+		DeployProgressURL: deployProgressURL,
 	}
 
 	tpl, err := template.New("install.sh").Parse(templates.InstallScriptTemplate)
@@ -309,7 +327,7 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 	}
 
 	scriptBody := buf.String()
-	scriptChecksum := computeScriptChecksum(scriptBody, cachedToken.Token)
+	scriptChecksum := computeScriptChecksum(scriptBody, trimmedInstallToken)
 	finalScript := injectScriptChecksum(scriptBody, scriptChecksum)
 
 	s.installTokens.Delete(nodeID)
@@ -891,7 +909,7 @@ func (s *NodeService) countNodes(ctx context.Context, filter repository.NodeList
 	return total, nil
 }
 
-func (s *NodeService) resolveDownloadBaseURL(ctx context.Context) (string, error) {
+func (s *NodeService) resolveDownloadBaseURL(ctx context.Context, requestBaseURL string) (string, error) {
 	var downloadBaseURL string
 	err := s.pool.QueryRow(ctx,
 		`SELECT COALESCE(telegram_config->>'download_base_url', '') FROM system_configs WHERE id = 1`,
@@ -903,6 +921,12 @@ func (s *NodeService) resolveDownloadBaseURL(ctx context.Context) (string, error
 	downloadBaseURL = strings.TrimSpace(downloadBaseURL)
 	if downloadBaseURL == "" {
 		downloadBaseURL = strings.TrimSpace(s.cfg.DownloadBaseURL)
+	}
+	if downloadBaseURL == "" {
+		requestBaseURL = strings.TrimSpace(requestBaseURL)
+		if requestBaseURL != "" {
+			downloadBaseURL = strings.TrimRight(requestBaseURL, "/") + "/downloads"
+		}
 	}
 	if downloadBaseURL == "" {
 		return "", ErrInstallForbidden
@@ -917,6 +941,10 @@ func (s *NodeService) resolveDeployProgressURL() string {
 	}
 
 	rawHubURL := strings.TrimSpace(s.cfg.HubWSURL)
+	return deriveDeployProgressURLFromHubWSURL(rawHubURL)
+}
+
+func deriveDeployProgressURLFromHubWSURL(rawHubURL string) string {
 	if rawHubURL == "" {
 		return ""
 	}
@@ -937,6 +965,27 @@ func (s *NodeService) resolveDeployProgressURL() string {
 	parsed.Fragment = ""
 	parsed.Path = "/api/internal/deploy/progress"
 
+	return parsed.String()
+}
+
+func deriveHubWSURLFromDownloadBaseURL(downloadBaseURL string) string {
+	parsed, err := url.Parse(strings.TrimSpace(downloadBaseURL))
+	if err != nil || parsed.Host == "" {
+		return ""
+	}
+
+	switch parsed.Scheme {
+	case "https":
+		parsed.Scheme = "wss"
+	case "http":
+		parsed.Scheme = "ws"
+	default:
+		return ""
+	}
+
+	parsed.RawQuery = ""
+	parsed.Fragment = ""
+	parsed.Path = "/ws"
 	return parsed.String()
 }
 

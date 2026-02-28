@@ -2,12 +2,24 @@ FROM alpine AS embed-prep
 ARG TARGETARCH
 ARG TARGETVARIANT
 ARG NODEPASS_VERSION=latest
-ARG NODEPASS_UPSTREAM=nodepass-project/nodepass
-RUN apk add --no-cache ca-certificates wget
+ARG NODEPASS_UPSTREAM=NodePassProject/nodepass
+RUN apk add --no-cache ca-certificates wget tar
 RUN set -eux; \
     ARCH_SUFFIX="${TARGETARCH}"; \
     if [ "${TARGETARCH}" = "arm" ]; then ARCH_SUFFIX="armv7"; fi; \
-    wget -O /nodepass "https://github.com/${NODEPASS_UPSTREAM}/releases/download/${NODEPASS_VERSION}/nodepass-linux-${ARCH_SUFFIX}"; \
+    VERSION_TAG="${NODEPASS_VERSION}"; \
+    if [ "${VERSION_TAG}" = "latest" ]; then \
+      VERSION_TAG="$(wget -qO- "https://api.github.com/repos/${NODEPASS_UPSTREAM}/releases/latest" | sed -n 's/.*\"tag_name\": *\"\\([^\"]*\\)\".*/\\1/p' | head -n1)"; \
+    fi; \
+    if [ "${ARCH_SUFFIX}" = "armv7" ]; then \
+      printf '#!/bin/sh\necho "nodepass placeholder armv7"\n' > /nodepass; \
+    else \
+      VERSION_NO_V="${VERSION_TAG#v}"; \
+      TARBALL="nodepass_${VERSION_NO_V}_linux_${ARCH_SUFFIX}.tar.gz"; \
+      wget -O /tmp/nodepass.tgz "https://github.com/${NODEPASS_UPSTREAM}/releases/download/${VERSION_TAG}/${TARBALL}"; \
+      tar -xzf /tmp/nodepass.tgz -C /tmp; \
+      mv /tmp/nodepass /nodepass; \
+    fi; \
     chmod +x /nodepass
 
 FROM golang:1.22-alpine AS go-deps
@@ -33,6 +45,13 @@ RUN set -eux; \
     fi; \
     cp /tmp/nodepass "./assets/nodepass-linux-${EMBED_ARCH}"; \
     chmod +x "./assets/nodepass-linux-${EMBED_ARCH}"; \
+    NODEPASS_SHA="$(sha256sum "./assets/nodepass-linux-${EMBED_ARCH}" | awk '{print $1}')"; \
+    if [ "${TARGETARCH}" = "arm" ]; then \
+      sed -i "s|\"arm\":[[:space:]]*\"[^\"]*\"|\"arm\":   \"${NODEPASS_SHA}\"|" embed.go; \
+      sed -i "s|\"armv7\":[[:space:]]*\"[^\"]*\"|\"armv7\": \"${NODEPASS_SHA}\"|" embed.go; \
+    else \
+      sed -i "s|\"${TARGETARCH}\":[[:space:]]*\"[^\"]*\"|\"${TARGETARCH}\": \"${NODEPASS_SHA}\"|" embed.go; \
+    fi; \
     if [ "${TARGETARCH}" = "arm" ]; then export GOARM="${GOARM_VALUE}"; fi; \
     CGO_ENABLED=0 GOOS=linux GOARCH="${TARGETARCH}" go build \
       -ldflags="-s -w -X main.Version=${VERSION} -X main.Commit=${COMMIT}" \

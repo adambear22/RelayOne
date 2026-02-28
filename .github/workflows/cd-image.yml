@@ -21,7 +21,7 @@ env:
   HUB_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-hub
   FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-frontend
   AGENT_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-agent
-  NODEPASS_UPSTREAM: "adambear22/RelayOne"
+  NODEPASS_UPSTREAM: "NodePassProject/nodepass"
 
 jobs:
   meta:
@@ -141,7 +141,7 @@ jobs:
         with:
           context: .
           file: docker/Dockerfile.frontend
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ needs.meta.outputs.frontend_tags }}
           labels: ${{ needs.meta.outputs.frontend_labels }}
