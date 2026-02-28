@@ -293,9 +293,16 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 	}
 
 	hubWSURL := strings.TrimSpace(s.cfg.HubWSURL)
+	if hubWSURL == "" {
+		hubWSURL = deriveHubWSURLFromDownloadBaseURL(downloadBaseURL)
+	}
 	agentVersion := strings.TrimSpace(s.cfg.AgentVersion)
 	if agentVersion == "" {
 		agentVersion = nodeDefaultAgentVer
+	}
+	deployProgressURL := s.resolveDeployProgressURL()
+	if deployProgressURL == "" {
+		deployProgressURL = deriveDeployProgressURLFromHubWSURL(hubWSURL)
 	}
 
 	tmplData := installScriptTemplateData{
@@ -306,7 +313,7 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 		AgentVersion:      agentVersion,
 		Arch:              node.Arch,
 		DownloadBaseURL:   downloadBaseURL,
-		DeployProgressURL: s.resolveDeployProgressURL(),
+		DeployProgressURL: deployProgressURL,
 	}
 
 	tpl, err := template.New("install.sh").Parse(templates.InstallScriptTemplate)
@@ -928,6 +935,10 @@ func (s *NodeService) resolveDeployProgressURL() string {
 	}
 
 	rawHubURL := strings.TrimSpace(s.cfg.HubWSURL)
+	return deriveDeployProgressURLFromHubWSURL(rawHubURL)
+}
+
+func deriveDeployProgressURLFromHubWSURL(rawHubURL string) string {
 	if rawHubURL == "" {
 		return ""
 	}
@@ -948,6 +959,27 @@ func (s *NodeService) resolveDeployProgressURL() string {
 	parsed.Fragment = ""
 	parsed.Path = "/api/internal/deploy/progress"
 
+	return parsed.String()
+}
+
+func deriveHubWSURLFromDownloadBaseURL(downloadBaseURL string) string {
+	parsed, err := url.Parse(strings.TrimSpace(downloadBaseURL))
+	if err != nil || parsed.Host == "" {
+		return ""
+	}
+
+	switch parsed.Scheme {
+	case "https":
+		parsed.Scheme = "wss"
+	case "http":
+		parsed.Scheme = "ws"
+	default:
+		return ""
+	}
+
+	parsed.RawQuery = ""
+	parsed.Fragment = ""
+	parsed.Path = "/ws"
 	return parsed.String()
 }
 
