@@ -137,6 +137,37 @@ exit 1
 	}
 }
 
+func TestStartManagedDoesNotWaitForCredentials(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("shell script test is unix-only")
+	}
+
+	scriptPath := writeExecutableScript(t, `#!/bin/sh
+set -eu
+echo "NodePass master starting..."
+sleep 2
+`)
+
+	m := &NodePassManager{
+		BinPath:      scriptPath,
+		MasterPort:   19090,
+		StartTimeout: 200 * time.Millisecond,
+		LogLevel:     "info",
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	defer m.Stop()
+
+	start := time.Now()
+	if err := m.StartManaged(ctx); err != nil {
+		t.Fatalf("StartManaged returned error: %v", err)
+	}
+	if time.Since(start) > 500*time.Millisecond {
+		t.Fatalf("StartManaged should return quickly without waiting for credentials")
+	}
+}
+
 func writeExecutableScript(t *testing.T, content string) string {
 	t.Helper()
 

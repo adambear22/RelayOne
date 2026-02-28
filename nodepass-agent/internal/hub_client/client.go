@@ -143,6 +143,14 @@ func (c *Client) Close() {
 	c.setConn(nil)
 }
 
+func (c *Client) UpdateNodePassCredentials(masterAddr, apiKey string) {
+	c.logger.Info(
+		"nodepass credentials updated",
+		slog.String("master_addr", strings.TrimSpace(masterAddr)),
+		slog.String("api_key_prefix", maskSecretPrefix(apiKey)),
+	)
+}
+
 func (c *Client) SendTrafficReport(records []nodepass.TrafficData) error {
 	if len(records) == 0 {
 		return nil
@@ -381,4 +389,15 @@ func (c *Client) setConn(conn *websocket.Conn) {
 func (c *Client) newMessageID() string {
 	value := c.counter.Add(1)
 	return strconv.FormatInt(time.Now().UTC().UnixNano(), 10) + "-" + strconv.FormatUint(value, 10)
+}
+
+func maskSecretPrefix(secret string) string {
+	trimmed := strings.TrimSpace(secret)
+	if trimmed == "" {
+		return ""
+	}
+	if len(trimmed) <= 8 {
+		return trimmed
+	}
+	return trimmed[:8] + "..."
 }

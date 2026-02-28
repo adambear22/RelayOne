@@ -54,7 +54,23 @@ type NodePassManager struct {
 	stopRequested bool
 }
 
+func New(binPath string, masterPort int) *NodePassManager {
+	return &NodePassManager{
+		BinPath:    strings.TrimSpace(binPath),
+		MasterPort: masterPort,
+	}
+}
+
 func (m *NodePassManager) Start(ctx context.Context) (Credentials, error) {
+	return m.start(ctx, true)
+}
+
+func (m *NodePassManager) StartManaged(ctx context.Context) error {
+	_, err := m.start(ctx, false)
+	return err
+}
+
+func (m *NodePassManager) start(ctx context.Context, waitForCreds bool) (Credentials, error) {
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -80,7 +96,7 @@ func (m *NodePassManager) Start(ctx context.Context) (Credentials, error) {
 	m.stopRequested = false
 	m.mu.Unlock()
 
-	creds, waitCh, err := m.launchProcess(runCtx)
+	creds, waitCh, err := m.launchProcess(runCtx, waitForCreds)
 	if err != nil {
 		m.mu.Lock()
 		m.clearRunStateLocked()
@@ -117,6 +133,12 @@ func (m *NodePassManager) Credentials() Credentials {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	return m.creds
+}
+
+func (m *NodePassManager) SetCredentials(creds Credentials) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.creds = creds
 }
 
 func (m *NodePassManager) startWatchdog(ctx context.Context) {
@@ -164,7 +186,7 @@ func (m *NodePassManager) startWatchdog(ctx context.Context) {
 		case <-time.After(delay):
 		}
 
-		creds, newWaitCh, err := m.launchProcess(ctx)
+		creds, newWaitCh, err := m.launchProcess(ctx, true)
 		if err != nil {
 			log.Printf("[watchdog] nodepass restart failed: %v", err)
 			continue
@@ -182,7 +204,7 @@ func (m *NodePassManager) startWatchdog(ctx context.Context) {
 	}
 }
 
-func (m *NodePassManager) launchProcess(ctx context.Context) (Credentials, chan error, error) {
+func (m *NodePassManager) launchProcess(ctx context.Context, waitForCreds bool) (Credentials, chan error, error) {
 	masterURL := fmt.Sprintf("master://0.0.0.0:%d?log=%s", m.MasterPort, m.LogLevel)
 	cmd := exec.CommandContext(ctx, m.BinPath, masterURL)
 
@@ -218,6 +240,10 @@ func (m *NodePassManager) launchProcess(ctx context.Context) (Credentials, chan 
 		streamWG.Wait()
 		_ = pw.Close()
 	}()
+
+	if !waitForCreds {
+		return m.Credentials(), waitCh, nil
+	}
 
 	credCh := make(chan Credentials, 1)
 	parseErrCh := make(chan error, 1)
