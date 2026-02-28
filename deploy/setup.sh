@@ -456,18 +456,72 @@ validate_telegram_token() {
   log_ok "Telegram Bot Token 校验通过"
 }
 
+read_input_with_default() {
+  local prompt="$1"
+  local default_value="$2"
+  local input_value
+
+  if [[ -n "${default_value}" ]]; then
+    read -r -p "${prompt} [${default_value}]: " input_value
+    if [[ -z "${input_value}" ]]; then
+      echo "${default_value}"
+      return
+    fi
+    echo "${input_value}"
+    return
+  fi
+
+  read -r -p "${prompt}: " input_value
+  echo "${input_value}"
+}
+
+read_secret_with_default() {
+  local prompt="$1"
+  local default_value="$2"
+  local input_value
+
+  if [[ -n "${default_value}" ]]; then
+    read -r -s -p "${prompt}（留空沿用当前）: " input_value
+    echo ""
+    if [[ -z "${input_value}" ]]; then
+      echo "${default_value}"
+      return
+    fi
+    echo "${input_value}"
+    return
+  fi
+
+  read -r -s -p "${prompt}: " input_value
+  echo ""
+  echo "${input_value}"
+}
+
 configure_env() {
   ensure_env_image_vars
 
-  if [[ -s "${ENV_FILE}" && "${ENV_WAS_CREATED}" -eq 0 ]]; then
-    DOMAIN="$(get_env_var DOMAIN)"
-    log_ok ".env 已存在，跳过交互式配置"
-    return
+  local current_domain current_db_user current_db_name current_db_password
+  local current_hub_version current_frontend_version current_agent_version
+  local current_hub_image current_frontend_image current_agent_image
+  local existing_tg_token
+
+  current_domain="$(get_env_var DOMAIN)"
+  current_db_user="$(get_env_var POSTGRES_USER)"
+  current_db_name="$(get_env_var POSTGRES_DB)"
+  current_db_password="$(get_env_var POSTGRES_PASSWORD)"
+  current_hub_version="$(get_env_var HUB_VERSION)"
+  current_frontend_version="$(get_env_var FRONTEND_VERSION)"
+  current_agent_version="$(get_env_var AGENT_VERSION)"
+  current_hub_image="$(get_env_var HUB_IMAGE)"
+  current_frontend_image="$(get_env_var FRONTEND_IMAGE)"
+  current_agent_image="$(get_env_var AGENT_IMAGE)"
+  existing_tg_token=""
+  if [[ -f "${SECRETS_DIR}/telegram_bot_token.txt" ]]; then
+    existing_tg_token="$(cat "${SECRETS_DIR}/telegram_bot_token.txt" 2>/dev/null || true)"
   fi
 
   echo -e "${BOLD}── 基础配置 ────────────────────${NC}"
   while true; do
-    read -r -p "域名（公网域名；测试可填 localhost 或 IP）: " DOMAIN
+    DOMAIN="$(read_input_with_default "域名（公网域名；测试可填 localhost 或 IP）" "${current_domain}")"
     DOMAIN="${DOMAIN// /}"
     if validate_domain "${DOMAIN}"; then
       break
@@ -480,18 +534,23 @@ configure_env() {
   check_domain_dns "${DOMAIN}"
 
   local db_password
-  read -r -s -p "数据库密码（留空自动生成）: " db_password
-  echo ""
+  db_password="$(read_secret_with_default "数据库密码（输入 random 自动生成）" "${current_db_password}")"
   if [[ -z "${db_password}" ]]; then
+    db_password="$(openssl rand -base64 32 | tr -d '=+/')"
+  elif [[ "${db_password}" == "random" ]]; then
     db_password="$(openssl rand -base64 32 | tr -d '=+/')"
   fi
   echo "  已设置数据库密码"
 
+  local db_user db_name
+  db_user="$(read_input_with_default "数据库用户名" "${current_db_user:-nodepass}")"
+  db_name="$(read_input_with_default "数据库名" "${current_db_name:-nodepass_hub}")"
+
   echo -e "${BOLD}── Telegram Bot 配置（可选，回车跳过）────────────────────${NC}"
-  read -r -p "Bot Token（格式：123456:ABC...，可选）: " TG_TOKEN
+  TG_TOKEN="$(read_secret_with_default "Bot Token（格式：123456:ABC...，可选）" "${existing_tg_token}")"
   validate_telegram_token "${TG_TOKEN}"
 
-  local repo_slug repo_owner latest_release target_version
+  local repo_slug repo_owner latest_release default_version target_version
   repo_slug="$(detect_repo_slug)"
   repo_owner="${repo_slug%%/*}"
   latest_release="latest"
@@ -502,24 +561,45 @@ configure_env() {
     fi
   fi
 
-  read -r -p "部署版本（默认 ${latest_release}）: " target_version
-  target_version="${target_version:-${latest_release}}"
+  default_version="${current_hub_version:-${latest_release}}"
+  target_version="$(read_input_with_default "部署版本" "${default_version}")"
+  if [[ -z "${target_version}" ]]; then
+    target_version="${latest_release}"
+  fi
+
+  local hub_image frontend_image agent_image
+  hub_image="$(read_input_with_default "Hub 镜像地址" "${current_hub_image:-ghcr.io/${repo_owner}/nodepass-hub}")"
+  frontend_image="$(read_input_with_default "Frontend 镜像地址" "${current_frontend_image:-ghcr.io/${repo_owner}/nodepass-frontend}")"
+  agent_image="$(read_input_with_default "Agent 镜像地址" "${current_agent_image:-ghcr.io/${repo_owner}/nodepass-agent}")"
+
+  if [[ -z "${hub_image}" || -z "${frontend_image}" || -z "${agent_image}" ]]; then
+    log_error "镜像地址不能为空"
+    exit 1
+  fi
 
   set_env_var "DOMAIN" "${DOMAIN}"
-  set_env_var "POSTGRES_USER" "nodepass"
+  set_env_var "POSTGRES_USER" "${db_user:-nodepass}"
   set_env_var "POSTGRES_PASSWORD" "${db_password}"
-  set_env_var "POSTGRES_DB" "nodepass_hub"
+  set_env_var "POSTGRES_DB" "${db_name:-nodepass_hub}"
   set_env_var "LOG_LEVEL" "info"
 
-  if [[ -n "${repo_owner}" && "${repo_owner}" != "${repo_slug}" ]]; then
-    set_env_var "HUB_IMAGE" "ghcr.io/${repo_owner}/nodepass-hub"
-    set_env_var "FRONTEND_IMAGE" "ghcr.io/${repo_owner}/nodepass-frontend"
-    set_env_var "AGENT_IMAGE" "ghcr.io/${repo_owner}/nodepass-agent"
+  set_env_var "HUB_IMAGE" "${hub_image}"
+  set_env_var "FRONTEND_IMAGE" "${frontend_image}"
+  set_env_var "AGENT_IMAGE" "${agent_image}"
+
+  local frontend_version agent_version
+  frontend_version="$(read_input_with_default "Frontend 版本标签" "${current_frontend_version:-${target_version}}")"
+  agent_version="$(read_input_with_default "Agent 版本标签" "${current_agent_version:-${target_version}}")"
+  if [[ -z "${frontend_version}" ]]; then
+    frontend_version="${target_version}"
+  fi
+  if [[ -z "${agent_version}" ]]; then
+    agent_version="${target_version}"
   fi
 
   set_env_var "HUB_VERSION" "${target_version}"
-  set_env_var "FRONTEND_VERSION" "${target_version}"
-  set_env_var "AGENT_VERSION" "${target_version}"
+  set_env_var "FRONTEND_VERSION" "${frontend_version}"
+  set_env_var "AGENT_VERSION" "${agent_version}"
 
   log_ok ".env 配置完成"
 }
