@@ -262,17 +262,28 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 		return "", ErrInstallForbidden
 	}
 
-	cachedTokenAny, ok := s.installTokens.Load(nodeID)
-	if !ok {
-		return "", ErrInstallForbidden
-	}
-	cachedToken, ok := cachedTokenAny.(cachedInstallToken)
-	if !ok || cachedToken.Token == "" || !cachedToken.ExpiresAt.After(now) {
-		s.installTokens.Delete(nodeID)
+	trimmedInstallToken := strings.TrimSpace(installToken)
+	if trimmedInstallToken == "" {
 		return "", ErrInstallForbidden
 	}
 
-	if subtle.ConstantTimeCompare([]byte(strings.TrimSpace(installToken)), []byte(cachedToken.Token)) != 1 {
+	validInstallToken := false
+	if cachedTokenAny, ok := s.installTokens.Load(nodeID); ok {
+		cachedToken, castOK := cachedTokenAny.(cachedInstallToken)
+		if !castOK || cachedToken.Token == "" || !cachedToken.ExpiresAt.After(now) {
+			s.installTokens.Delete(nodeID)
+		} else if subtle.ConstantTimeCompare([]byte(trimmedInstallToken), []byte(cachedToken.Token)) == 1 {
+			validInstallToken = true
+		}
+	}
+
+	if !validInstallToken && strings.TrimSpace(node.Token) != "" {
+		if bcrypt.CompareHashAndPassword([]byte(node.Token), []byte(trimmedInstallToken)) == nil {
+			validInstallToken = true
+		}
+	}
+
+	if !validInstallToken {
 		return "", ErrInstallForbidden
 	}
 
@@ -289,7 +300,7 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 
 	tmplData := installScriptTemplateData{
 		AgentID:           node.ID.String(),
-		AgentToken:        cachedToken.Token,
+		AgentToken:        trimmedInstallToken,
 		AgentAuthToken:    cryptoutil.GenerateAgentHMACToken(node.ID.String(), s.cfg.HMACSecret),
 		HubWSURL:          hubWSURL,
 		AgentVersion:      agentVersion,
@@ -309,7 +320,7 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 	}
 
 	scriptBody := buf.String()
-	scriptChecksum := computeScriptChecksum(scriptBody, cachedToken.Token)
+	scriptChecksum := computeScriptChecksum(scriptBody, trimmedInstallToken)
 	finalScript := injectScriptChecksum(scriptBody, scriptChecksum)
 
 	s.installTokens.Delete(nodeID)
