@@ -268,6 +268,8 @@ download_files() {
   else
     log_ok ".env 已存在，跳过初始化"
   fi
+
+  ensure_env_image_vars
 }
 
 set_env_var() {
@@ -314,6 +316,39 @@ detect_repo_slug() {
     slug="${BASH_REMATCH[1]}"
   fi
   echo "${slug}"
+}
+
+ensure_env_image_vars() {
+  local repo_slug owner changed
+  local hub_image frontend_image agent_image
+  repo_slug="$(detect_repo_slug)"
+  owner="${repo_slug%%/*}"
+  changed=0
+
+  if [[ -z "${owner}" || "${owner}" == "${repo_slug}" ]]; then
+    return
+  fi
+
+  hub_image="$(get_env_var HUB_IMAGE)"
+  frontend_image="$(get_env_var FRONTEND_IMAGE)"
+  agent_image="$(get_env_var AGENT_IMAGE)"
+
+  if [[ -z "${hub_image}" || "${hub_image}" == *"<ORG>"* ]]; then
+    set_env_var "HUB_IMAGE" "ghcr.io/${owner}/nodepass-hub"
+    changed=1
+  fi
+  if [[ -z "${frontend_image}" || "${frontend_image}" == *"<ORG>"* ]]; then
+    set_env_var "FRONTEND_IMAGE" "ghcr.io/${owner}/nodepass-frontend"
+    changed=1
+  fi
+  if [[ -z "${agent_image}" || "${agent_image}" == *"<ORG>"* ]]; then
+    set_env_var "AGENT_IMAGE" "ghcr.io/${owner}/nodepass-agent"
+    changed=1
+  fi
+
+  if [[ "${changed}" -eq 1 ]]; then
+    log_ok ".env 镜像地址已自动修正为 ghcr.io/${owner}/nodepass-*"
+  fi
 }
 
 validate_domain() {
@@ -422,6 +457,8 @@ validate_telegram_token() {
 }
 
 configure_env() {
+  ensure_env_image_vars
+
   if [[ -s "${ENV_FILE}" && "${ENV_WAS_CREATED}" -eq 0 ]]; then
     DOMAIN="$(get_env_var DOMAIN)"
     log_ok ".env 已存在，跳过交互式配置"
@@ -454,8 +491,9 @@ configure_env() {
   read -r -p "Bot Token（格式：123456:ABC...，可选）: " TG_TOKEN
   validate_telegram_token "${TG_TOKEN}"
 
-  local repo_slug latest_release target_version
+  local repo_slug repo_owner latest_release target_version
   repo_slug="$(detect_repo_slug)"
+  repo_owner="${repo_slug%%/*}"
   latest_release="latest"
   if [[ -n "${repo_slug}" && "${repo_slug}" != *"<"* ]]; then
     latest_release="$(curl -sf "https://api.github.com/repos/${repo_slug}/releases/latest" | jq -r '.tag_name' 2>/dev/null || echo "latest")"
@@ -473,10 +511,10 @@ configure_env() {
   set_env_var "POSTGRES_DB" "nodepass_hub"
   set_env_var "LOG_LEVEL" "info"
 
-  if [[ -n "${repo_slug}" ]]; then
-    set_env_var "HUB_IMAGE" "ghcr.io/${repo_slug%/nodepass-hub}/nodepass-hub"
-    set_env_var "FRONTEND_IMAGE" "ghcr.io/${repo_slug%/nodepass-hub}/nodepass-frontend"
-    set_env_var "AGENT_IMAGE" "ghcr.io/${repo_slug%/nodepass-hub}/nodepass-agent"
+  if [[ -n "${repo_owner}" && "${repo_owner}" != "${repo_slug}" ]]; then
+    set_env_var "HUB_IMAGE" "ghcr.io/${repo_owner}/nodepass-hub"
+    set_env_var "FRONTEND_IMAGE" "ghcr.io/${repo_owner}/nodepass-frontend"
+    set_env_var "AGENT_IMAGE" "ghcr.io/${repo_owner}/nodepass-agent"
   fi
 
   set_env_var "HUB_VERSION" "${target_version}"
