@@ -5,7 +5,7 @@ BUILD_TIME := $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 .PHONY: dev-up dev-down dev-logs \
 	hub-build hub-test hub-lint hub-migrate hub-build-prod \
 	fe-install fe-build fe-test fe-lint \
-	agent-build agent-test \
+	build-agent agent-build agent-test \
 	dev-keys seed shellcheck \
 	test build-all
 
@@ -63,8 +63,15 @@ fe-lint:
 	cd frontend && npm run lint
 
 # Agent
-agent-build:
-	cd nodepass-agent && go build -o bin/nodepass-agent ./cmd/agent
+build-agent:
+	@echo "Checking embedded NodePass binaries..."
+	@test -f nodepass-agent/embedfs/nodepass_linux_amd64 || (echo "ERROR: missing nodepass-agent/embedfs/nodepass_linux_amd64"; exit 1)
+	@test -f nodepass-agent/embedfs/nodepass_linux_arm64 || (echo "ERROR: missing nodepass-agent/embedfs/nodepass_linux_arm64"; exit 1)
+	@test -f nodepass-agent/embedfs/nodepass_darwin_amd64 || (echo "ERROR: missing nodepass-agent/embedfs/nodepass_darwin_amd64"; exit 1)
+	cd nodepass-agent && mkdir -p bin && go build -o bin/nodepass-agent ./cmd/agent
+	@echo "Agent size: $$(du -sh nodepass-agent/bin/nodepass-agent | cut -f1)"
+
+agent-build: build-agent
 
 agent-test:
 	cd nodepass-agent && go test -race ./...

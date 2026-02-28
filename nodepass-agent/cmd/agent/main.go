@@ -2,15 +2,16 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
-	"runtime"
 	"strings"
 	"syscall"
 	"time"
 
-	agent "nodepass-agent"
+	"nodepass-agent/embedfs"
+	"nodepass-agent/extractor"
 	"nodepass-agent/internal/hub_client"
 	"nodepass-agent/internal/nodepass"
 )
@@ -21,14 +22,26 @@ var (
 )
 
 func main() {
-	if len(os.Args) > 1 && os.Args[1] == "healthcheck" {
-		os.Exit(runHealthcheck())
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "healthcheck":
+			os.Exit(runHealthcheck())
+		case "extract-only", "--extract-only":
+			logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
+			nodepassPath, err := extractNodePassBinary(logger)
+			if err != nil {
+				logger.Error("extract nodepass failed", slog.Any("err", err))
+				os.Exit(1)
+			}
+			fmt.Println(nodepassPath)
+			return
+		}
 	}
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
 	logger.Info("agent starting", slog.String("version", Version), slog.String("commit", Commit))
 
-	nodepassPath, err := agent.ExtractNodePass(runtime.GOARCH, Version)
+	nodepassPath, err := extractNodePassBinary(logger)
 	if err != nil {
 		logger.Error("extract nodepass failed", slog.Any("err", err))
 		os.Exit(1)
@@ -66,6 +79,20 @@ func main() {
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer shutdownCancel()
 	manager.Shutdown(shutdownCtx)
+}
+
+func extractNodePassBinary(logger *slog.Logger) (string, error) {
+	workDir := strings.TrimSpace(os.Getenv("NODEPASS_WORK_DIR"))
+	ex := extractor.New(workDir)
+	if err := ex.Extract(embedfs.NodepassFiles); err != nil {
+		return "", err
+	}
+
+	if logger != nil {
+		logger.Info("nodepass binary ready", slog.String("path", ex.BinPath))
+	}
+
+	return ex.BinPath, nil
 }
 
 func runHealthcheck() int {

@@ -43,15 +43,8 @@ RUN set -eux; \
       GOARM_VALUE="${TARGETVARIANT#v}"; \
       if [ -z "${GOARM_VALUE}" ]; then GOARM_VALUE="7"; fi; \
     fi; \
-    cp /tmp/nodepass "./assets/nodepass-linux-${EMBED_ARCH}"; \
-    chmod +x "./assets/nodepass-linux-${EMBED_ARCH}"; \
-    NODEPASS_SHA="$(sha256sum "./assets/nodepass-linux-${EMBED_ARCH}" | awk '{print $1}')"; \
-    if [ "${TARGETARCH}" = "arm" ]; then \
-      sed -i "s|\"arm\":[[:space:]]*\"[^\"]*\"|\"arm\":   \"${NODEPASS_SHA}\"|" embed.go; \
-      sed -i "s|\"armv7\":[[:space:]]*\"[^\"]*\"|\"armv7\": \"${NODEPASS_SHA}\"|" embed.go; \
-    else \
-      sed -i "s|\"${TARGETARCH}\":[[:space:]]*\"[^\"]*\"|\"${TARGETARCH}\": \"${NODEPASS_SHA}\"|" embed.go; \
-    fi; \
+    cp /tmp/nodepass "./embedfs/nodepass_linux_${EMBED_ARCH}"; \
+    chmod +x "./embedfs/nodepass_linux_${EMBED_ARCH}"; \
     if [ "${TARGETARCH}" = "arm" ]; then export GOARM="${GOARM_VALUE}"; fi; \
     CGO_ENABLED=0 GOOS=linux GOARCH="${TARGETARCH}" go build \
       -ldflags="-s -w -X main.Version=${VERSION} -X main.Commit=${COMMIT}" \
