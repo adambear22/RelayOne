@@ -9,6 +9,7 @@ AGENT_VERSION="{{ .AgentVersion }}"
 ARCH="{{ .Arch }}"
 DOWNLOAD_BASE_URL="{{ .DownloadBaseURL }}"
 DEPLOY_PROGRESS_URL="{{ .DeployProgressURL }}"
+INSTALL_SCRIPT_URL="{{ .InstallScriptURL }}"
 
 INSTALL_DIR="/opt/nodepass-agent"
 BINARY_PATH="${INSTALL_DIR}/nodepass-agent"
@@ -46,7 +47,20 @@ ensure_dependencies() {
 verify_checksum() {
   local source_path="${BASH_SOURCE[0]:-$0}"
   if [[ -z "${source_path}" || ! -r "${source_path}" ]]; then
-    echo "unable to read script source for checksum verification"
+    if [[ -n "${INSTALL_SCRIPT_URL}" && -z "${NODEPASS_INSTALL_REFETCHED:-}" ]]; then
+      local retry_script
+      retry_script="$(mktemp /tmp/nodepass-agent-install.XXXXXX.sh)"
+      if curl -fsSL "${INSTALL_SCRIPT_URL}" -o "${retry_script}"; then
+        chmod 700 "${retry_script}"
+        NODEPASS_INSTALL_REFETCHED=1 exec bash "${retry_script}"
+      fi
+      rm -f "${retry_script}"
+    fi
+
+    echo "unable to read script source for checksum verification" >&2
+    if [[ -n "${INSTALL_SCRIPT_URL}" ]]; then
+      echo "retry with: bash <(curl -fsSL \"${INSTALL_SCRIPT_URL}\")" >&2
+    fi
     exit 1
   fi
 

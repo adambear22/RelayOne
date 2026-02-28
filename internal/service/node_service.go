@@ -9,6 +9,7 @@ import (
 	"crypto/subtle"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"net"
 	"net/url"
 	"strconv"
@@ -129,6 +130,7 @@ type installScriptTemplateData struct {
 	Arch              string
 	DownloadBaseURL   string
 	DeployProgressURL string
+	InstallScriptURL  string
 }
 
 func NewNodeService(
@@ -314,6 +316,7 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 		Arch:              node.Arch,
 		DownloadBaseURL:   downloadBaseURL,
 		DeployProgressURL: deployProgressURL,
+		InstallScriptURL:  buildInstallScriptURL(requestBaseURL, node.ID.String(), trimmedInstallToken),
 	}
 
 	tpl, err := template.New("install.sh").Parse(templates.InstallScriptTemplate)
@@ -966,6 +969,20 @@ func deriveDeployProgressURLFromHubWSURL(rawHubURL string) string {
 	parsed.Path = "/api/internal/deploy/progress"
 
 	return parsed.String()
+}
+
+func buildInstallScriptURL(requestBaseURL, nodeID, installToken string) string {
+	baseURL := strings.TrimRight(strings.TrimSpace(requestBaseURL), "/")
+	if baseURL == "" || strings.TrimSpace(nodeID) == "" || strings.TrimSpace(installToken) == "" {
+		return ""
+	}
+
+	return fmt.Sprintf(
+		"%s/api/v1/nodes/%s/install.sh?installToken=%s",
+		baseURL,
+		url.PathEscape(strings.TrimSpace(nodeID)),
+		url.QueryEscape(strings.TrimSpace(installToken)),
+	)
 }
 
 func deriveHubWSURLFromDownloadBaseURL(downloadBaseURL string) string {
