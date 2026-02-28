@@ -54,5 +54,5 @@ ENTRYPOINT ["/nodepass-agent"]
 #   --build-arg NODEPASS_VERSION=v1.x.x \
 #   --build-arg VERSION=$(git describe --tags) \
 #   -f docker/Dockerfile.agent \
-#   -t ghcr.io/<ORG>/nodepass-agent:latest \
+#   -t ghcr.io/adambear22/nodepass-agent:latest \
 #   --push .

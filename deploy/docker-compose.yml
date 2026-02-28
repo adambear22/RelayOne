@@ -28,7 +28,7 @@ services:
     <<: *default-logging
 
   migrate:
-    image: ${HUB_IMAGE:-ghcr.io/<ORG>/nodepass-hub}:${HUB_VERSION:-latest}
+    image: ${HUB_IMAGE:-ghcr.io/adambear22/nodepass-hub}:${HUB_VERSION:-latest}
     command: ["migrate"]
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
@@ -41,7 +41,7 @@ services:
     <<: *default-logging
 
   hub:
-    image: ${HUB_IMAGE:-ghcr.io/<ORG>/nodepass-hub}:${HUB_VERSION:-latest}
+    image: ${HUB_IMAGE:-ghcr.io/adambear22/nodepass-hub}:${HUB_VERSION:-latest}
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
@@ -76,7 +76,7 @@ services:
     <<: *default-logging
 
   frontend:
-    image: ${FRONTEND_IMAGE:-ghcr.io/<ORG>/nodepass-frontend}:${FRONTEND_VERSION:-latest}
+    image: ${FRONTEND_IMAGE:-ghcr.io/adambear22/nodepass-frontend}:${FRONTEND_VERSION:-latest}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/"]

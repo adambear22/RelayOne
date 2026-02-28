@@ -1,6 +1,6 @@
 # NodePass 管理平台
 
-![CI Status](https://img.shields.io/github/actions/workflow/status/<ORG>/nodepass-hub/ci.yml?branch=main) ![Latest Release](https://img.shields.io/github/v/release/<ORG>/nodepass-hub) ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Go Version](https://img.shields.io/badge/go-1.22%2B-00ADD8) ![Docker Pulls](https://img.shields.io/docker/pulls/<ORG>/nodepass-hub)
+![CI Status](https://img.shields.io/github/actions/workflow/status/adambear22/RelayOne/ci.yml?branch=main) ![Latest Release](https://img.shields.io/github/v/release/adambear22/RelayOne) ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Go Version](https://img.shields.io/badge/go-1.22%2B-00ADD8) ![Docker Pulls](https://img.shields.io/docker/pulls/adambear22/nodepass-hub)
 
 ## 简介
 
@@ -51,14 +51,14 @@ NodePass 管理平台是基于 NodePass 核心引擎的延伸型前端管理系�
 ### 一键部署
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<ORG>/nodepass-hub/main/deploy/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/setup.sh | bash
 ```
 
 ### 手动部署
 
 ```bash
-git clone https://github.com/<ORG>/nodepass-hub.git
-cd nodepass-hub
+git clone https://github.com/adambear22/RelayOne.git
+cd RelayOne
 cp deploy/.env.example deploy/.env
 # 编辑 deploy/.env
 
@@ -68,8 +68,8 @@ docker compose up -d
 ## 开发环境
 
 ```bash
-git clone https://github.com/<ORG>/nodepass-hub.git
-cd nodepass-hub
+git clone https://github.com/adambear22/RelayOne.git
+cd RelayOne
 make dev-up
 ```
 

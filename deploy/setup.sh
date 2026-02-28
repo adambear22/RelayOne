@@ -14,7 +14,7 @@ log_warn()  { echo -e "${YELLOW}⚠${NC}  $1"; }
 log_error() { echo -e "${RED}✗${NC}  $1" >&2; }
 log_info()  { echo -e "  $1"; }
 
-REPO_URL="${REPO_URL:-https://raw.githubusercontent.com/<ORG>/nodepass-hub/main}"
+REPO_URL="${REPO_URL:-https://raw.githubusercontent.com/adambear22/RelayOne/main}"
 INSTALL_DIR="${INSTALL_DIR:-/opt/nodepass}"
 COMPOSE_VERSION="${COMPOSE_VERSION:-v2.27.0}"
 REPO_URL="${REPO_URL%/}"

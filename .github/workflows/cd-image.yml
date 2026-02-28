@@ -21,7 +21,7 @@ env:
   HUB_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-hub
   FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-frontend
   AGENT_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-agent
-  NODEPASS_UPSTREAM: "<NODEPASS_UPSTREAM>"
+  NODEPASS_UPSTREAM: "adambear22/RelayOne"
 
 jobs:
   meta:

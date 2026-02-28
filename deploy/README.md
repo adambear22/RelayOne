@@ -10,15 +10,15 @@
 ## 快速部署
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/<ORG>/nodepass-hub/main/deploy/setup.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/setup.sh)"
 ```
 
 ## 手动部署
 
 1. 克隆仓库并进入目录：
    ```bash
-   git clone https://github.com/<ORG>/nodepass-hub.git
-   cd nodepass-hub
+   git clone https://github.com/adambear22/RelayOne.git
+   cd RelayOne
    ```
 2. 准备配置文件：
    ```bash
