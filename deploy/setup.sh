@@ -140,12 +140,36 @@ check_ports() {
 }
 
 check_network() {
-  if curl -sfI --connect-timeout 10 https://ghcr.io >/dev/null; then
-    log_ok "网络检查通过（可访问 ghcr.io）"
-  else
-    log_error "无法访问 ghcr.io，请检查防火墙、DNS 或网络出口策略"
-    exit 1
+  if [[ "${SKIP_NETWORK_CHECK:-0}" == "1" ]]; then
+    log_warn "已跳过网络检查（SKIP_NETWORK_CHECK=1）"
+    return
   fi
+
+  local ok=0
+  local endpoint
+  for endpoint in "https://ghcr.io/v2/" "https://raw.githubusercontent.com/"; do
+    if curl -sfI --connect-timeout 10 "${endpoint}" >/dev/null 2>&1; then
+      ok=1
+      break
+    fi
+    if curl -4sfI --connect-timeout 10 "${endpoint}" >/dev/null 2>&1; then
+      ok=1
+      break
+    fi
+  done
+
+  if [[ "${ok}" -eq 1 ]]; then
+    log_ok "网络检查通过（可访问 GitHub/GHCR）"
+    return
+  fi
+
+  log_error "无法访问 ghcr.io/raw.githubusercontent.com，请检查防火墙、DNS 或网络出口策略"
+  if command -v getent >/dev/null 2>&1; then
+    log_info "DNS 解析（ghcr.io）："
+    getent hosts ghcr.io | head -n 3 || true
+  fi
+  log_info "可尝试：先设置代理后重试，或临时 SKIP_NETWORK_CHECK=1 跳过检查"
+  exit 1
 }
 
 install_docker() {
