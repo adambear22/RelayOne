@@ -313,6 +313,9 @@ func loadConfig() (Config, error) {
 	v.SetEnvPrefix("NODEPASS")
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	v.AutomaticEnv()
+	if err := v.BindEnv("database.url", "NODEPASS_DATABASE_URL", "DATABASE_URL"); err != nil {
+		return Config{}, fmt.Errorf("bind env for database.url failed: %w", err)
+	}
 
 	v.SetDefault("app.env", "development")
 	v.SetDefault("server.host", "0.0.0.0")
