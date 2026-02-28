@@ -1,0 +1,4 @@
+*                 @<ORG>/core-team
+frontend/         @<ORG>/frontend-team
+nodepass-agent/   @<ORG>/agent-team
+.github/          @<ORG>/devops-team

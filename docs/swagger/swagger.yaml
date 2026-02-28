@@ -1,0 +1,3343 @@
+basePath: /
+definitions:
+  nodepass-hub_internal_api_response.Pagination:
+    properties:
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  nodepass-hub_internal_api_response.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+      pagination:
+        $ref: '#/definitions/nodepass-hub_internal_api_response.Pagination'
+    type: object
+info:
+  contact: {}
+  description: NodePass Hub service API documentation.
+  title: NodePass Hub API
+  version: "1.0"
+paths:
+  /api/v1/announcements:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for List.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List
+      tags:
+      - announcement
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Create.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create
+      tags:
+      - announcement
+  /api/v1/announcements/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Delete.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete
+      tags:
+      - announcement
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetByID.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: GetByID
+      tags:
+      - announcement
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Update.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update
+      tags:
+      - announcement
+  /api/v1/announcements/{id}/toggle:
+    patch:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Toggle.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Toggle
+      tags:
+      - announcement
+  /api/v1/announcements/active:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ListActive.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      summary: ListActive
+      tags:
+      - announcement
+  /api/v1/audit:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for List.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List
+      tags:
+      - audit
+  /api/v1/auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Logout.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Logout
+      tags:
+      - auth
+  /api/v1/auth/password:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ChangePassword.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ChangePassword
+      tags:
+      - auth
+  /api/v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Refresh.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      summary: Refresh
+      tags:
+      - auth
+  /api/v1/auth/sso:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for SSO.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: SSO
+      tags:
+      - auth
+  /api/v1/auth/telegram/callback:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for TelegramCallback.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      summary: TelegramCallback
+      tags:
+      - auth
+  /api/v1/auth/telegram/webhook:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Webhook.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Webhook
+      tags:
+      - user
+  /api/v1/codes:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for List.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List
+      tags:
+      - code
+  /api/v1/codes/batch:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for BatchDelete.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: BatchDelete
+      tags:
+      - code
+  /api/v1/codes/batch-generate:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for BatchGenerate.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: BatchGenerate
+      tags:
+      - code
+  /api/v1/codes/status:
+    patch:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for BatchUpdateStatus.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: BatchUpdateStatus
+      tags:
+      - code
+  /api/v1/events:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Events.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Events
+      tags:
+      - sse
+  /api/v1/hop-chains:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for List.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List
+      tags:
+      - hop-chain
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Create.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create
+      tags:
+      - hop-chain
+  /api/v1/hop-chains/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Delete.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete
+      tags:
+      - hop-chain
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetByID.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: GetByID
+      tags:
+      - hop-chain
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Update.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update
+      tags:
+      - hop-chain
+  /api/v1/hop-chains/{id}/nodes:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ListNodes.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ListNodes
+      tags:
+      - hop-chain
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ReplaceNodes.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ReplaceNodes
+      tags:
+      - hop-chain
+  /api/v1/hop-chains/{id}/nodes/reorder:
+    patch:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ReorderNodes.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ReorderNodes
+      tags:
+      - hop-chain
+  /api/v1/lb-groups:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for List.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List
+      tags:
+      - lb-group
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Create.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create
+      tags:
+      - lb-group
+  /api/v1/lb-groups/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Delete.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete
+      tags:
+      - lb-group
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetByID.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: GetByID
+      tags:
+      - lb-group
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Update.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update
+      tags:
+      - lb-group
+  /api/v1/lb-groups/{id}/members:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ListMembers.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ListMembers
+      tags:
+      - lb-group
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for AddMember.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: AddMember
+      tags:
+      - lb-group
+  /api/v1/lb-groups/{id}/members/{memberID}:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for DeleteMember.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: memberID
+        in: path
+        name: memberID
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: DeleteMember
+      tags:
+      - lb-group
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for UpdateMember.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: memberID
+        in: path
+        name: memberID
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: UpdateMember
+      tags:
+      - lb-group
+  /api/v1/nodes:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for List.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List
+      tags:
+      - node
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Create.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create
+      tags:
+      - node
+  /api/v1/nodes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Delete.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete
+      tags:
+      - node
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetByID.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: GetByID
+      tags:
+      - node
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Update.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update
+      tags:
+      - node
+  /api/v1/nodes/{id}/deploy-logs:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ListDeployLogs.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ListDeployLogs
+      tags:
+      - node
+  /api/v1/nodes/{id}/install.sh:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GenerateInstallScript.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      summary: GenerateInstallScript
+      tags:
+      - node
+  /api/v1/nodes/{id}/tcp-test:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for TestTCPConnectivity.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: TestTCPConnectivity
+      tags:
+      - node
+  /api/v1/rules:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for List.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List
+      tags:
+      - rule
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Create.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create
+      tags:
+      - rule
+  /api/v1/rules/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Delete.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete
+      tags:
+      - rule
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetByID.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: GetByID
+      tags:
+      - rule
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Update.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update
+      tags:
+      - rule
+  /api/v1/rules/{id}/instance:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetInstanceInfo.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: GetInstanceInfo
+      tags:
+      - rule
+  /api/v1/rules/{id}/restart:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Restart.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Restart
+      tags:
+      - rule
+  /api/v1/rules/{id}/start:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Start.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Start
+      tags:
+      - rule
+  /api/v1/rules/{id}/stop:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Stop.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Stop
+      tags:
+      - rule
+  /api/v1/rules/{id}/sync:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Sync.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Sync
+      tags:
+      - rule
+  /api/v1/rules/batch:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for BatchDelete.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: BatchDelete
+      tags:
+      - rule
+  /api/v1/system/config:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetConfig.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      summary: GetConfig
+      tags:
+      - system
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for UpdateConfig.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: UpdateConfig
+      tags:
+      - system
+  /api/v1/system/logs:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for QueryLogs.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: QueryLogs
+      tags:
+      - system
+  /api/v1/traffic/daily:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for QueryDaily.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: QueryDaily
+      tags:
+      - traffic
+  /api/v1/traffic/monthly:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for QueryMonthly.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: QueryMonthly
+      tags:
+      - traffic
+  /api/v1/traffic/overview:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Overview.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Overview
+      tags:
+      - traffic
+  /api/v1/traffic/reset/{userID}:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ResetUserQuota.
+      parameters:
+      - description: userID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ResetUserQuota
+      tags:
+      - traffic
+  /api/v1/traffic/rules/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for QueryRuleStats.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: QueryRuleStats
+      tags:
+      - traffic
+  /api/v1/traffic/stats:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for QueryStats.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: QueryStats
+      tags:
+      - traffic
+  /api/v1/traffic/sync:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for BatchSyncQuota.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: BatchSyncQuota
+      tags:
+      - traffic
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for List.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: List
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Create.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create
+      tags:
+      - user
+  /api/v1/users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetByID.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: GetByID
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Update.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update
+      tags:
+      - user
+  /api/v1/users/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for SetStatus.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: SetStatus
+      tags:
+      - user
+  /api/v1/users/{id}/telegram/bind:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for UnbindTelegram.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: UnbindTelegram
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for BindTelegram.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: BindTelegram
+      tags:
+      - user
+  /api/v1/users/me:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Me.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Me
+      tags:
+      - user
+  /api/v1/vip:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ListLevels.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ListLevels
+      tags:
+      - vip
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for CreateLevel.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: CreateLevel
+      tags:
+      - vip
+  /api/v1/vip/{level}:
+    delete:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for DeleteLevel.
+      parameters:
+      - description: level
+        in: path
+        name: level
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: DeleteLevel
+      tags:
+      - vip
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for GetLevel.
+      parameters:
+      - description: level
+        in: path
+        name: level
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: GetLevel
+      tags:
+      - vip
+    put:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for UpdateLevel.
+      parameters:
+      - description: level
+        in: path
+        name: level
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: UpdateLevel
+      tags:
+      - vip
+  /api/v1/vip/me:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Me.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Me
+      tags:
+      - vip
+  /api/v1/vip/users/{id}/upgrade:
+    post:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for UpgradeUser.
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: UpgradeUser
+      tags:
+      - vip
+  /ws/agent:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for Agent.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+      summary: Agent
+      tags:
+      - websocket
+schemes:
+- http
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

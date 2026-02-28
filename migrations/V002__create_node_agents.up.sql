@@ -1,0 +1,23 @@
+CREATE TABLE node_agents (
+    id UUID PRIMARY KEY,
+    name VARCHAR(128) NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    owner_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    is_self_hosted BOOLEAN NOT NULL DEFAULT FALSE,
+    host VARCHAR(255) NOT NULL,
+    api_port INTEGER NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    deploy_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    deploy_error TEXT,
+    vip_level_req INTEGER NOT NULL DEFAULT 0,
+    traffic_ratio NUMERIC(5,2) NOT NULL DEFAULT 1.0,
+    port_range_min INTEGER,
+    port_range_max INTEGER,
+    arch VARCHAR(20) NOT NULL DEFAULT 'amd64',
+    agent_version VARCHAR(32),
+    sys_info JSONB,
+    last_seen_at TIMESTAMPTZ,
+    install_script_expires_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

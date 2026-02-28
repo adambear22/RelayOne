@@ -1,0 +1,10 @@
+.git
+.github
+.vscode
+.idea
+*.log
+*.out
+coverage.out
+data
+.tmp
+.DS_Store

@@ -1,0 +1,29 @@
+app:
+  env: development # 应用运行环境（development/staging/production）
+
+server:
+  host: 0.0.0.0 # HTTP 服务监听地址
+  port: 8080 # HTTP 服务监听端口
+  read_timeout: 10s # HTTP 请求读取超时时间
+  write_timeout: 15s # HTTP 响应写入超时时间
+  shutdown_timeout: 10s # 服务优雅关闭超时时间
+
+database:
+  url: "" # 从环境变量读取
+  max_conns: 10 # pgx 连接池最大连接数
+  ping_timeout: 3s # /health/ready 数据库探活超时时间
+
+log:
+  level: info # 日志级别（debug/info/warn/error）
+  encoding: json # 日志编码格式（json/console）
+
+security:
+  agent_hmac_secret: "" # 从环境变量读取
+
+cors:
+  allow_origins: # 允许跨域来源（必须显式列出，禁止使用 *）
+    - http://localhost:5173
+    - http://localhost:4173
+
+debug:
+  pprof_enabled: false # 仅在 development 环境生效，开启 /debug/pprof/

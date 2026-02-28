@@ -1,0 +1,10 @@
+frontend/
+nodepass-agent/
+deploy/
+scripts/
+.github/
+*.md
+config.yaml
+.env*
+bin/
+**/*_test.go

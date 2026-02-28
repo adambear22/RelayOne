@@ -1,0 +1,133 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+AGENT_ID="{{ .AgentID }}"
+AGENT_TOKEN="{{ .AgentToken }}"
+AGENT_AUTH_TOKEN="{{ .AgentAuthToken }}"
+HUB_WS_URL="{{ .HubWSURL }}"
+AGENT_VERSION="{{ .AgentVersion }}"
+ARCH="{{ .Arch }}"
+DOWNLOAD_BASE_URL="{{ .DownloadBaseURL }}"
+DEPLOY_PROGRESS_URL="{{ .DeployProgressURL }}"
+
+INSTALL_DIR="/opt/nodepass-agent"
+BINARY_PATH="${INSTALL_DIR}/nodepass-agent"
+SERVICE_PATH="/etc/systemd/system/nodepass-agent.service"
+SERVICE_NAME="nodepass-agent"
+
+report_progress() {
+  local step="$1"
+  local progress="$2"
+  local message="$3"
+
+  curl -fsS -X POST "${DEPLOY_PROGRESS_URL}" \
+    -H "Content-Type: application/json" \
+    -H "X-Agent-ID: ${AGENT_ID}" \
+    -H "X-Agent-Token: ${AGENT_AUTH_TOKEN}" \
+    --data "{\"agent_id\":\"${AGENT_ID}\",\"step\":\"${step}\",\"progress\":${progress},\"message\":\"${message}\"}" \
+    >/dev/null || true
+}
+
+ensure_dependencies() {
+  command -v curl >/dev/null 2>&1 || {
+    echo "curl is required"
+    exit 1
+  }
+  command -v systemctl >/dev/null 2>&1 || {
+    echo "systemctl is required"
+    exit 1
+  }
+  command -v openssl >/dev/null 2>&1 || {
+    echo "openssl is required"
+    exit 1
+  }
+}
+
+verify_checksum() {
+  local source_path="${BASH_SOURCE[0]:-$0}"
+  if [[ -z "${source_path}" || ! -r "${source_path}" ]]; then
+    echo "unable to read script source for checksum verification"
+    exit 1
+  fi
+
+  local expected
+  expected="$(grep -m 1 '^# nodepass-checksum:' "${source_path}" | awk '{print $3}')"
+  if [[ -z "${expected}" ]]; then
+    echo "missing script checksum header"
+    exit 1
+  fi
+
+  local actual
+  actual="$(grep -v '^# nodepass-checksum:' "${source_path}" | openssl dgst -sha256 -hmac "${AGENT_TOKEN}" | awk '{print $2}')"
+  if [[ -z "${actual}" || "${actual}" != "${expected}" ]]; then
+    echo "script checksum verification failed"
+    exit 1
+  fi
+}
+
+build_download_url() {
+  local file_name="nodepass-agent-${AGENT_VERSION}-linux-${ARCH}"
+  echo "${DOWNLOAD_BASE_URL%/}/${file_name}"
+}
+
+install_binary() {
+  local download_url
+  download_url="$(build_download_url)"
+
+  mkdir -p "${INSTALL_DIR}"
+  report_progress "download_binary" 20 "downloading agent binary"
+
+  curl -fL -C - "${download_url}" -o "${BINARY_PATH}"
+  chmod +x "${BINARY_PATH}"
+
+  report_progress "binary_ready" 40 "agent binary downloaded"
+}
+
+write_service_file() {
+  report_progress "write_service" 55 "writing systemd service"
+
+  cat > "${SERVICE_PATH}" <<SERVICE
+[Unit]
+Description=NodePass Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=${INSTALL_DIR}
+Environment="AGENT_ID=${AGENT_ID}"
+Environment="AGENT_TOKEN=${AGENT_TOKEN}"
+Environment="AGENT_AUTH_TOKEN=${AGENT_AUTH_TOKEN}"
+Environment="HUB_WS_URL=${HUB_WS_URL}"
+ExecStart=${BINARY_PATH}
+Restart=always
+RestartSec=5
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+
+  report_progress "service_written" 70 "systemd service file created"
+}
+
+start_service() {
+  report_progress "start_service" 80 "starting service"
+
+  systemctl daemon-reload
+  systemctl enable --now "${SERVICE_NAME}"
+
+  report_progress "wait_connected" 90 "service started, waiting websocket connection"
+}
+
+main() {
+  ensure_dependencies
+  verify_checksum
+  report_progress "prepare" 5 "prepare installation"
+  install_binary
+  write_service_file
+  start_service
+}
+
+main "$@"

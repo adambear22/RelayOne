@@ -1,0 +1,45 @@
+# Go
+*.exe
+*.test
+*.out
+vendor/
+bin/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env*.local
+
+# Agent build
+nodepass-agent/bin/
+nodepass-agent/assets/*.binary
+
+# Config and secrets (do not commit)
+config.yaml
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# Keep example env templates
+!.env.example
+!deploy/.env.example
+
+# Deploy artifacts
+deploy/.env
+deploy/data/
+deploy/backups/*
+!deploy/backups/.gitkeep
+deploy/secrets/*
+!deploy/secrets/.gitkeep
+scripts/dev-keys/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# System
+.DS_Store
+Thumbs.db

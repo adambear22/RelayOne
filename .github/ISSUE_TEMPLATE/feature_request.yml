@@ -1,0 +1,30 @@
+name: Feature Request
+description: 提交一个新功能建议
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: feature_desc
+    attributes:
+      label: 功能描述
+      description: 请清晰描述希望新增或改进的能力
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: 使用场景
+      description: 该功能将解决什么问题、在哪些场景使用
+    validations:
+      required: true
+
+  - type: textarea
+    id: handbook_relation
+    attributes:
+      label: 与开发手册的关联模块
+      description: 请标注关联章节/模块（如 P1-05、§6.3 等）
+      placeholder: 例如：Sprint 3 / 规则管理 API
+    validations:
+      required: false

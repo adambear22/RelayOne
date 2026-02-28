@@ -1,0 +1,14 @@
+DROP INDEX IF EXISTS idx_node_agents_deploy_status;
+DROP INDEX IF EXISTS idx_hop_chain_nodes_chain;
+DROP INDEX IF EXISTS idx_node_deploy_logs_node;
+DROP INDEX IF EXISTS idx_benefit_codes_code;
+DROP INDEX IF EXISTS idx_audit_logs_created;
+DROP INDEX IF EXISTS idx_audit_logs_user_created;
+DROP INDEX IF EXISTS idx_traffic_hourly_user_hour;
+DROP INDEX IF EXISTS idx_traffic_hourly_rule_hour;
+DROP INDEX IF EXISTS idx_rules_hop_chain;
+DROP INDEX IF EXISTS idx_rules_lb_group;
+DROP INDEX IF EXISTS idx_rules_status;
+DROP INDEX IF EXISTS idx_rules_owner_id;
+DROP INDEX IF EXISTS idx_users_telegram_id;
+DROP INDEX IF EXISTS idx_users_status;

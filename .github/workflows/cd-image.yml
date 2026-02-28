@@ -1,0 +1,231 @@
+name: CD Image
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      push_latest:
+        description: "同时更新 :latest 标签"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+env:
+  REGISTRY: ghcr.io
+  HUB_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-hub
+  FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-frontend
+  AGENT_IMAGE: ghcr.io/${{ github.repository_owner }}/nodepass-agent
+  NODEPASS_UPSTREAM: "<NODEPASS_UPSTREAM>"
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      hub_tags: ${{ steps.hub_meta.outputs.tags }}
+      hub_labels: ${{ steps.hub_meta.outputs.labels }}
+      frontend_tags: ${{ steps.frontend_meta.outputs.tags }}
+      frontend_labels: ${{ steps.frontend_meta.outputs.labels }}
+      agent_tags: ${{ steps.agent_meta.outputs.tags }}
+      agent_labels: ${{ steps.agent_meta.outputs.labels }}
+      version: ${{ steps.version.outputs.version }}
+      commit_sha: ${{ steps.version.outputs.commit_sha }}
+      build_time: ${{ steps.version.outputs.build_time }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute version
+        id: version
+        env:
+          HEAD_COMMIT_TS: ${{ github.event.head_commit.timestamp }}
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF_NAME}"
+          else
+            VERSION="sha-$(echo "${GITHUB_SHA}" | head -c 7)"
+          fi
+
+          BUILD_TIME="${HEAD_COMMIT_TS:-}"
+          if [[ -z "${BUILD_TIME}" ]]; then
+            BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          fi
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "commit_sha=$(echo "${GITHUB_SHA}" | head -c 7)" >> "$GITHUB_OUTPUT"
+          echo "build_time=${BUILD_TIME}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/metadata-action@v5
+        id: hub_meta
+        with:
+          images: ${{ env.HUB_IMAGE }}
+          tags: |
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=sha,prefix=sha-,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.push_latest == true) }}
+
+      - uses: docker/metadata-action@v5
+        id: frontend_meta
+        with:
+          images: ${{ env.FRONTEND_IMAGE }}
+          tags: |
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=sha,prefix=sha-,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.push_latest == true) }}
+
+      - uses: docker/metadata-action@v5
+        id: agent_meta
+        with:
+          images: ${{ env.AGENT_IMAGE }}
+          tags: |
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=sha,prefix=sha-,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.push_latest == true) }}
+
+  build-push-hub:
+    needs: meta
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.hub
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ needs.meta.outputs.hub_tags }}
+          labels: ${{ needs.meta.outputs.hub_labels }}
+          cache-from: type=gha,scope=hub
+          cache-to: type=gha,mode=max,scope=hub
+          build-args: |
+            VERSION=${{ needs.meta.outputs.version }}
+            COMMIT=${{ github.sha }}
+            BUILD_TIME=${{ needs.meta.outputs.build_time }}
+          provenance: true
+          sbom: true
+
+  build-push-frontend:
+    needs: meta
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.frontend
+          platforms: linux/amd64
+          push: true
+          tags: ${{ needs.meta.outputs.frontend_tags }}
+          labels: ${{ needs.meta.outputs.frontend_labels }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,mode=max,scope=frontend
+          build-args: |
+            VITE_APP_VERSION=${{ needs.meta.outputs.version }}
+          provenance: true
+          sbom: true
+
+  build-push-agent:
+    needs: meta
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get NodePass latest version
+        id: nodepass_ver
+        run: |
+          NODEPASS_VERSION=$(curl -sf "https://api.github.com/repos/${NODEPASS_UPSTREAM}/releases/latest" | jq -r .tag_name)
+          if [[ -z "${NODEPASS_VERSION}" || "${NODEPASS_VERSION}" == "null" ]]; then
+            echo "Failed to resolve NodePass release version from ${NODEPASS_UPSTREAM}" >&2
+            exit 1
+          fi
+          echo "version=${NODEPASS_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.agent
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: ${{ needs.meta.outputs.agent_tags }}
+          labels: ${{ needs.meta.outputs.agent_labels }}
+          cache-from: type=gha,scope=agent
+          cache-to: type=gha,mode=max,scope=agent
+          build-args: |
+            NODEPASS_UPSTREAM=${{ env.NODEPASS_UPSTREAM }}
+            NODEPASS_VERSION=${{ steps.nodepass_ver.outputs.version }}
+            VERSION=${{ needs.meta.outputs.version }}
+            COMMIT=${{ github.sha }}
+          provenance: true
+          sbom: true
+
+  post-deploy-check:
+    needs: [meta, build-push-hub, build-push-frontend, build-push-agent]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify Hub image manifest
+        run: docker manifest inspect "${{ env.HUB_IMAGE }}:${{ needs.meta.outputs.version }}"
+
+      - name: Verify Agent multi-arch manifest
+        run: |
+          MANIFEST_JSON=$(docker manifest inspect "${{ env.AGENT_IMAGE }}:${{ needs.meta.outputs.version }}")
+          echo "${MANIFEST_JSON}" | jq -e '
+            [.manifests[].platform] as $platforms
+            | (any($platforms[]; .architecture == "amd64"))
+              and (any($platforms[]; .architecture == "arm64"))
+              and (any($platforms[]; .architecture == "arm" and ((.variant // "") == "v7")))
+          '
+
+      - name: Output summary
+        run: |
+          echo "## 镜像发布成功 🎉" >> "$GITHUB_STEP_SUMMARY"
+          echo "| 镜像 | 标签 |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|------|------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Hub | \`${{ env.HUB_IMAGE }}:${{ needs.meta.outputs.version }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Frontend | \`${{ env.FRONTEND_IMAGE }}:${{ needs.meta.outputs.version }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Agent | \`${{ env.AGENT_IMAGE }}:${{ needs.meta.outputs.version }}\` |" >> "$GITHUB_STEP_SUMMARY"

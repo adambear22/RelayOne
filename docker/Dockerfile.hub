@@ -1,0 +1,33 @@
+FROM golang:1.22-alpine AS deps
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+
+FROM deps AS builder
+WORKDIR /app
+COPY . .
+ARG VERSION=dev
+ARG COMMIT=unknown
+ARG BUILD_TIME
+RUN CGO_ENABLED=0 GOOS=linux go build \
+    -ldflags="-s -w \
+      -X main.Version=${VERSION} \
+      -X main.Commit=${COMMIT} \
+      -X main.BuildTime=${BUILD_TIME}" \
+    -o /nodepass-hub ./cmd/server
+
+FROM builder AS builder-test
+RUN go test -race -count=1 ./...
+
+FROM gcr.io/distroless/static-debian12 AS final
+COPY --from=builder /nodepass-hub /nodepass-hub
+COPY --from=builder /app/migrations /migrations
+COPY --from=builder /app/templates /templates
+USER nonroot:nonroot
+EXPOSE 8080
+VOLUME ["/data"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+  CMD ["/nodepass-hub", "healthcheck"]
+ENTRYPOINT ["/nodepass-hub"]
+
+# Estimated final image size: ~25MB (<30MB target)

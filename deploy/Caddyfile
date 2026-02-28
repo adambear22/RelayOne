@@ -1,0 +1,42 @@
+{env.DOMAIN} {
+  # SSE 专用配置（禁用缓冲）
+  handle /api/v1/events {
+    reverse_proxy hub:8080 {
+      flush_interval -1
+      header_up Cache-Control no-cache
+    }
+  }
+
+  # 后端 API
+  handle /api/* {
+    reverse_proxy hub:8080 {
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+    }
+  }
+
+  # WebSocket
+  handle /ws/* {
+    reverse_proxy hub:8080 {
+      transport http {
+        dial_timeout 5s
+        response_header_timeout 0
+      }
+    }
+  }
+
+  # 前端
+  handle {
+    reverse_proxy frontend:8080
+  }
+
+  encode gzip zstd
+
+  log {
+    output file /var/log/caddy/access.log {
+      roll_size 50mb
+      roll_keep 10
+    }
+    format json
+  }
+}
