@@ -14,6 +14,35 @@ log_warn()  { echo -e "${YELLOW}⚠${NC}  $1"; }
 log_error() { echo -e "${RED}✗${NC}  $1" >&2; }
 log_info()  { echo -e "  $1"; }
 
+read_tty_line() {
+  local prompt="$1"
+  local value
+
+  if [[ -r /dev/tty ]]; then
+    read -r -p "${prompt}" value < /dev/tty
+    echo "${value}"
+    return
+  fi
+
+  log_error "当前环境不可交互（无法读取 /dev/tty）"
+  exit 1
+}
+
+read_tty_secret() {
+  local prompt="$1"
+  local value
+
+  if [[ -r /dev/tty ]]; then
+    read -r -s -p "${prompt}" value < /dev/tty
+    echo "" > /dev/tty
+    echo "${value}"
+    return
+  fi
+
+  log_error "当前环境不可交互（无法读取 /dev/tty）"
+  exit 1
+}
+
 REPO_URL="${REPO_URL:-https://raw.githubusercontent.com/adambear22/RelayOne/main}"
 INSTALL_DIR="${INSTALL_DIR:-/opt/nodepass}"
 COMPOSE_VERSION="${COMPOSE_VERSION:-v2.27.0}"
@@ -426,7 +455,8 @@ check_domain_dns() {
 
   if [[ -n "${server_ip}" && "${resolved_ip}" != "${server_ip}" ]]; then
     log_warn "域名解析 IP (${resolved_ip}) 与当前服务器 IP (${server_ip}) 不一致"
-    read -r -p "是否继续部署？[y/N]: " confirm
+    local confirm
+    confirm="$(read_tty_line "是否继续部署？[y/N]: ")"
     if [[ ! "${confirm}" =~ ^[Yy]$ ]]; then
       log_error "部署已取消"
       exit 1
@@ -459,10 +489,10 @@ validate_telegram_token() {
 read_input_with_default() {
   local prompt="$1"
   local default_value="$2"
-  local input_value
 
   if [[ -n "${default_value}" ]]; then
-    read -r -p "${prompt} [${default_value}]: " input_value
+    local input_value
+    input_value="$(read_tty_line "${prompt} [${default_value}]: ")"
     if [[ -z "${input_value}" ]]; then
       echo "${default_value}"
       return
@@ -471,18 +501,16 @@ read_input_with_default() {
     return
   fi
 
-  read -r -p "${prompt}: " input_value
-  echo "${input_value}"
+  read_tty_line "${prompt}: "
 }
 
 read_secret_with_default() {
   local prompt="$1"
   local default_value="$2"
-  local input_value
 
   if [[ -n "${default_value}" ]]; then
-    read -r -s -p "${prompt}（留空沿用当前）: " input_value
-    echo ""
+    local input_value
+    input_value="$(read_tty_secret "${prompt}（留空沿用当前）: ")"
     if [[ -z "${input_value}" ]]; then
       echo "${default_value}"
       return
@@ -491,9 +519,7 @@ read_secret_with_default() {
     return
   fi
 
-  read -r -s -p "${prompt}: " input_value
-  echo ""
-  echo "${input_value}"
+  read_tty_secret "${prompt}: "
 }
 
 configure_env() {
@@ -740,13 +766,12 @@ setup_admin() {
   echo ""
   echo -e "${BOLD}── 创建管理员账号 ────────────────────${NC}"
 
-  read -r -p "管理员用户名（默认 admin）: " ADMIN_USER
+  ADMIN_USER="$(read_tty_line "管理员用户名（默认 admin）: ")"
   ADMIN_USER="${ADMIN_USER:-admin}"
 
   local admin_pass
   while true; do
-    read -r -s -p "管理员密码（≥12位，含大小写字母和数字）: " admin_pass
-    echo ""
+    admin_pass="$(read_tty_secret "管理员密码（≥12位，含大小写字母和数字）: ")"
     if echo "${admin_pass}" | grep -qE '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{12,}$'; then
       break
     fi
