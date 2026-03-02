@@ -2,6 +2,7 @@ package v1
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -55,6 +56,7 @@ func RegisterCodeRoutes(group *gin.RouterGroup, codeService *service.BenefitCode
 	codes.Use(middleware.JWTAuth())
 
 	codes.GET("/", handler.List)
+	codes.GET("/redeem/history", handler.ListRedeemHistory)
 	codes.POST("/batch-generate", middleware.AuditLog("benefit_code.batch_generate", "benefit_code"), handler.BatchGenerate)
 	codes.PATCH("/status", middleware.AuditLog("benefit_code.batch_update_status", "benefit_code"), handler.BatchUpdateStatus)
 	codes.DELETE("/batch", middleware.AuditLog("benefit_code.batch_delete", "benefit_code"), handler.BatchDelete)
@@ -131,6 +133,70 @@ func (h *CodeHandler) List(c *gin.Context) {
 	}
 
 	response.Paginated(c, items, page, pageSize, total)
+}
+
+// ListRedeemHistory
+// @Summary ListRedeemHistory
+// @Description Auto-generated endpoint documentation for ListRedeemHistory.
+// @Tags code
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer access token"
+// @Security ApiKeyAuth
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Failure 401 {object} response.Response
+// @Failure 403 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Router /api/v1/codes/redeem/history [get]
+func (h *CodeHandler) ListRedeemHistory(c *gin.Context) {
+	claims, ok := middleware.GetClaims(c)
+	if !ok {
+		response.Fail(c, http.StatusUnauthorized, response.ErrUnauthorized, "unauthorized")
+		return
+	}
+
+	page := parseIntOrDefault(c.Query("page"), 1)
+	pageSize := parseIntOrDefault(c.Query("page_size"), 20)
+	items, total, err := h.codeService.ListRedeemHistory(c.Request.Context(), claims.UserID, page, pageSize)
+	if err != nil {
+		handleBenefitCodeServiceError(c, err)
+		return
+	}
+
+	result := make([]gin.H, 0, len(items))
+	for _, item := range items {
+		if item == nil {
+			continue
+		}
+
+		var (
+			usedAt    *string
+			expiresAt *string
+		)
+		if item.UsedAt != nil {
+			formatted := item.UsedAt.UTC().Format(time.RFC3339Nano)
+			usedAt = &formatted
+			if item.DurationDays > 0 {
+				exp := item.UsedAt.UTC().AddDate(0, 0, item.DurationDays).Format(time.RFC3339Nano)
+				expiresAt = &exp
+			}
+		}
+
+		remark := fmt.Sprintf("通过权益码兑换：VIP Lv.%d，时长 %d 天", item.VIPLevel, item.DurationDays)
+		result = append(result, gin.H{
+			"id":            item.ID.String(),
+			"code":          item.Code,
+			"vip_level":     item.VIPLevel,
+			"duration_days": item.DurationDays,
+			"used_at":       usedAt,
+			"expires_at":    expiresAt,
+			"source":        "benefit_code",
+			"remark":        remark,
+		})
+	}
+
+	response.Paginated(c, result, page, pageSize, total)
 }
 
 // BatchGenerate

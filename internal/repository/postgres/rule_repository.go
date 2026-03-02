@@ -308,7 +308,7 @@ func (r *ruleRepository) List(ctx context.Context, filter repository.RuleListFil
 	}
 
 	args = append(args, limit, offset)
-	builder.WriteString(fmt.Sprintf(" ORDER BY created_at DESC LIMIT $%d OFFSET $%d", len(args)-1, len(args)))
+	_, _ = fmt.Fprintf(&builder, " ORDER BY created_at DESC LIMIT $%d OFFSET $%d", len(args)-1, len(args))
 
 	rows, err := r.pool.Query(ctx, builder.String(), args...)
 	if err != nil {

@@ -10,15 +10,49 @@
 ## 快速部署
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/<ORG>/nodepass-hub/main/deploy/setup.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/setup.sh)"
+```
+
+## 一键更新（推荐）
+
+拉取最新部署文件并升级到 `latest`：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/update.sh | sudo bash -s -- --version latest
+```
+
+指定分支与版本：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/update.sh | sudo bash -s -- --ref codex/develop --version v1.2.3
+```
+
+如果部署目录不是 `/opt/nodepass`（例如 `/opt/transitx`），请显式指定（脚本会自动识别 `/opt/transitx` 或 `/opt/transitx/deploy`）：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/update.sh | sudo bash -s -- --install-dir /opt/transitx --version latest
+```
+
+## 交互式部署向导（推荐）
+
+在仓库根目录执行：
+
+```bash
+bash scripts/deploy.sh
+```
+
+复用已有配置（跳过交互）：
+
+```bash
+bash scripts/deploy.sh --config /path/to/deploy.conf
 ```
 
 ## 手动部署
 
 1. 克隆仓库并进入目录：
    ```bash
-   git clone https://github.com/<ORG>/nodepass-hub.git
-   cd nodepass-hub
+   git clone https://github.com/adambear22/RelayOne.git
+   cd RelayOne
    ```
 2. 准备配置文件：
    ```bash
@@ -29,6 +63,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/<ORG>/nodepass-hub/main/
    - `jwt_private.pem`
    - `jwt_public.pem`
    - `agent_hmac_secret.txt`
+   - `internal_token.txt`
    - `telegram_bot_token.txt`
    - `external_api_key.txt`
 4. 启动服务：
@@ -60,6 +95,43 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/<ORG>/nodepass-hub/main/
   bash deploy/upgrade.sh v1.2.3
   ```
 
+- 一键更新（已部署服务器）：
+  ```bash
+  bash /opt/nodepass/update.sh --version latest
+  ```
+
+- 查看部署信息汇总：
+  ```bash
+  cat /opt/nodepass/deploy-info.txt
+  ```
+
+- 如果迁移报错 `permission denied: /run/secrets/...`（非 root 容器读取 secret 失败）：
+  ```bash
+  sudo chown 65532:65532 /opt/nodepass/secrets/*
+  sudo chmod 600 /opt/nodepass/secrets/*
+  ```
+
+- 使用交互式升级脚本：
+  ```bash
+  bash scripts/upgrade.sh
+  ```
+
+- 卸载（可选保留数据）：
+  ```bash
+  bash scripts/uninstall.sh
+  ```
+
+- 生产安全检查：
+  ```bash
+  sudo bash scripts/security_check.sh
+  ```
+
+- 启动监控栈（Prometheus/Grafana/Alertmanager）：
+  ```bash
+  docker compose -f monitoring/docker-compose.monitoring.yml up -d
+  ```
+  通过主域名访问（需 Caddy）：`/grafana`、`/prometheus`、`/alertmanager`。
+
 ## 回滚
 
 1. 编辑 `deploy/.env`，将 `HUB_VERSION` 和 `FRONTEND_VERSION` 改为旧版本 tag。
@@ -67,3 +139,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/<ORG>/nodepass-hub/main/
    ```bash
    docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d --no-deps hub frontend
    ```
+
+## 常见问题
+
+- `load config failed: database.url is required`  
+  说明 Hub 镜像未从环境变量读取到数据库地址。新版部署脚本会自动生成 `config.yaml`。  
+  先重新执行 setup/update，再重试迁移。

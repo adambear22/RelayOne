@@ -1,0 +1,11 @@
+/var/log/nodepass/*.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    postrotate
+        systemctl kill -s HUP nodepass-agent.service >/dev/null 2>&1 || true
+    endscript
+}

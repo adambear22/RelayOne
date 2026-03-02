@@ -162,6 +162,7 @@ func loadSSEPublicKey() (*rsa.PublicKey, error) {
 		if pem == "" {
 			path := strings.TrimSpace(os.Getenv("NODEPASS_JWT_PUBLIC_KEY_FILE"))
 			if path != "" {
+				// #nosec G304,G703 -- path is provided by operator environment variable.
 				buf, err := os.ReadFile(path)
 				if err != nil {
 					ssePublicKeyErr = err

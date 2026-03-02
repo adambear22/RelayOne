@@ -2,6 +2,7 @@ package hub
 
 import (
 	"context"
+	"encoding/json"
 	"sync"
 	"testing"
 	"time"
@@ -11,6 +12,7 @@ import (
 
 	"nodepass-hub/internal/model"
 	"nodepass-hub/internal/repository"
+	"nodepass-hub/internal/service"
 )
 
 type heartbeatRecord struct {
@@ -21,6 +23,49 @@ type heartbeatRecord struct {
 type fakeNodeRepository struct {
 	mu         sync.Mutex
 	heartbeats map[uuid.UUID]heartbeatRecord
+}
+
+type fakeTrafficService struct {
+	handleErr error
+}
+
+func (s *fakeTrafficService) HandleReport(ctx context.Context, agentID string, records []service.TrafficRecord) error {
+	_ = ctx
+	_ = agentID
+	_ = records
+	return s.handleErr
+}
+
+func (s *fakeTrafficService) QueryStats(context.Context, string, string, time.Time, time.Time) ([]service.TrafficStat, error) {
+	return nil, nil
+}
+
+func (s *fakeTrafficService) QueryUserDailyStats(context.Context, string, int) ([]*service.DailyStat, error) {
+	return nil, nil
+}
+
+func (s *fakeTrafficService) QueryUserMonthlyStats(context.Context, string, int) ([]*service.MonthlyStat, error) {
+	return nil, nil
+}
+
+func (s *fakeTrafficService) QueryRuleStats(context.Context, string, time.Time, time.Time) ([]*service.HourlyPoint, error) {
+	return nil, nil
+}
+
+func (s *fakeTrafficService) AdminOverview(context.Context) (*service.TrafficOverview, error) {
+	return nil, nil
+}
+
+func (s *fakeTrafficService) ResetUserQuota(context.Context, string) error {
+	return nil
+}
+
+func (s *fakeTrafficService) ResetAllMonthlyQuotas(context.Context) (int64, error) {
+	return 0, nil
+}
+
+func (s *fakeTrafficService) BatchSyncQuota(context.Context) error {
+	return nil
 }
 
 func newFakeNodeRepository() *fakeNodeRepository {
@@ -166,5 +211,56 @@ func TestSendToAgent_NonBlockingOnFullChannel(t *testing.T) {
 
 	if got := len(client.Send); got != 1 {
 		t.Fatalf("expected full channel to stay at length 1, got %d", got)
+	}
+}
+
+func TestHandleTrafficReport_SendsAck(t *testing.T) {
+	t.Parallel()
+
+	client := &AgentClient{
+		ID:   uuid.New().String(),
+		Send: make(chan []byte, 2),
+		Done: make(chan struct{}),
+	}
+	h := &Hub{
+		trafficSvc: &fakeTrafficService{},
+		logger:     zap.NewNop(),
+		stopCh:     make(chan struct{}),
+	}
+
+	payload, err := json.Marshal(TrafficReportPayload{
+		AgentID: client.ID,
+		Records: []TrafficRecord{{
+			RuleID:    uuid.New().String(),
+			BytesIn:   10,
+			BytesOut:  20,
+			Timestamp: time.Now().UTC(),
+		}},
+	})
+	if err != nil {
+		t.Fatalf("marshal payload: %v", err)
+	}
+
+	requestID := uuid.NewString()
+	h.handleTrafficReport(client, Message{
+		Type:    TrafficReport,
+		ID:      requestID,
+		Payload: payload,
+	})
+
+	select {
+	case raw := <-client.Send:
+		var ack Message
+		if err := json.Unmarshal(raw, &ack); err != nil {
+			t.Fatalf("decode ack: %v", err)
+		}
+		if ack.Type != Ack {
+			t.Fatalf("expected Ack type, got %s", ack.Type)
+		}
+		if ack.ID != requestID {
+			t.Fatalf("unexpected ack id: %s", ack.ID)
+		}
+	case <-time.After(2 * time.Second):
+		t.Fatalf("timeout waiting for traffic ack")
 	}
 }

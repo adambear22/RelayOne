@@ -1,0 +1,7 @@
+goos: darwin
+goarch: arm64
+pkg: nodepass-hub/tests/benchmark
+cpu: Apple M4
+BenchmarkSSE_PublishToAll_1000clients-10    	83054871	        12.50 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	nodepass-hub/tests/benchmark	1.674s

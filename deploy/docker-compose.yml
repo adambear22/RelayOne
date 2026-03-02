@@ -1,5 +1,3 @@
-version: '3.8'
-
 x-logging: &default-logging
   logging:
     driver: json-file
@@ -28,11 +26,16 @@ services:
     <<: *default-logging
 
   migrate:
-    image: ${HUB_IMAGE:-ghcr.io/<ORG>/nodepass-hub}:${HUB_VERSION:-latest}
+    image: ${HUB_IMAGE:-ghcr.io/adambear22/nodepass-hub}:${HUB_VERSION:-latest}
     command: ["migrate"]
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
       NODEPASS_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
+      NODEPASS_SECURITY_AGENT_HMAC_SECRET_FILE: /run/secrets/agent_hmac_secret
+    volumes:
+      - ./config.yaml:/config.yaml:ro
+    secrets:
+      - agent_hmac_secret
     depends_on:
       postgres:
         condition: service_healthy
@@ -41,7 +44,7 @@ services:
     <<: *default-logging
 
   hub:
-    image: ${HUB_IMAGE:-ghcr.io/<ORG>/nodepass-hub}:${HUB_VERSION:-latest}
+    image: ${HUB_IMAGE:-ghcr.io/adambear22/nodepass-hub}:${HUB_VERSION:-latest}
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
@@ -55,13 +58,16 @@ services:
       NODEPASS_JWT_PRIVATE_KEY_FILE: /run/secrets/jwt_private_key
       NODEPASS_JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
       NODEPASS_SECURITY_AGENT_HMAC_SECRET_FILE: /run/secrets/agent_hmac_secret
+      NODEPASS_SECURITY_INTERNAL_TOKEN_FILE: /run/secrets/internal_token
     secrets:
       - jwt_private_key
       - jwt_public_key
       - agent_hmac_secret
+      - internal_token
       - telegram_bot_token
       - external_api_key
     volumes:
+      - ./config.yaml:/config.yaml:ro
       - hub_data:/data
     depends_on:
       migrate:
@@ -76,7 +82,7 @@ services:
     <<: *default-logging
 
   frontend:
-    image: ${FRONTEND_IMAGE:-ghcr.io/<ORG>/nodepass-frontend}:${FRONTEND_VERSION:-latest}
+    image: ${FRONTEND_IMAGE:-ghcr.io/adambear22/nodepass-frontend}:${FRONTEND_VERSION:-latest}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/"]
@@ -96,6 +102,7 @@ services:
       DOMAIN: ${DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./downloads:/srv/downloads:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
@@ -133,6 +140,8 @@ secrets:
     file: ./secrets/jwt_public.pem
   agent_hmac_secret:
     file: ./secrets/agent_hmac_secret.txt
+  internal_token:
+    file: ./secrets/internal_token.txt
   telegram_bot_token:
     file: ./secrets/telegram_bot_token.txt
   external_api_key:

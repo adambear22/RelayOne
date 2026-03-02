@@ -9,6 +9,7 @@ import (
 	"crypto/subtle"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"net"
 	"net/url"
 	"strconv"
@@ -129,6 +130,7 @@ type installScriptTemplateData struct {
 	Arch              string
 	DownloadBaseURL   string
 	DeployProgressURL string
+	InstallScriptURL  string
 }
 
 func NewNodeService(
@@ -243,7 +245,7 @@ func (s *NodeService) Create(ctx context.Context, ownerID string, req CreateNode
 	return response, nil
 }
 
-func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, installToken string) (string, error) {
+func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, installToken string, requestBaseURL string) (string, error) {
 	nodeUUID, err := uuid.Parse(nodeID)
 	if err != nil {
 		return "", ErrInvalidNodeID
@@ -287,7 +289,7 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 		return "", ErrInstallForbidden
 	}
 
-	downloadBaseURL, err := s.resolveDownloadBaseURL(ctx)
+	downloadBaseURL, err := s.resolveDownloadBaseURL(ctx, requestBaseURL)
 	if err != nil {
 		return "", err
 	}
@@ -314,6 +316,7 @@ func (s *NodeService) GenerateInstallScript(ctx context.Context, nodeID string, 
 		Arch:              node.Arch,
 		DownloadBaseURL:   downloadBaseURL,
 		DeployProgressURL: deployProgressURL,
+		InstallScriptURL:  buildInstallScriptURL(requestBaseURL, node.ID.String(), trimmedInstallToken),
 	}
 
 	tpl, err := template.New("install.sh").Parse(templates.InstallScriptTemplate)
@@ -448,8 +451,8 @@ func (s *NodeService) List(ctx context.Context, page, pageSize int, filter NodeL
 
 	repoFilter := repository.NodeListFilter{
 		Pagination: repository.Pagination{
-			Limit:  int32(pageSize),
-			Offset: int32((page - 1) * pageSize),
+			Limit:  clampIntToInt32(pageSize),
+			Offset: clampIntToInt32((page - 1) * pageSize),
 		},
 	}
 
@@ -909,7 +912,7 @@ func (s *NodeService) countNodes(ctx context.Context, filter repository.NodeList
 	return total, nil
 }
 
-func (s *NodeService) resolveDownloadBaseURL(ctx context.Context) (string, error) {
+func (s *NodeService) resolveDownloadBaseURL(ctx context.Context, requestBaseURL string) (string, error) {
 	var downloadBaseURL string
 	err := s.pool.QueryRow(ctx,
 		`SELECT COALESCE(telegram_config->>'download_base_url', '') FROM system_configs WHERE id = 1`,
@@ -921,6 +924,12 @@ func (s *NodeService) resolveDownloadBaseURL(ctx context.Context) (string, error
 	downloadBaseURL = strings.TrimSpace(downloadBaseURL)
 	if downloadBaseURL == "" {
 		downloadBaseURL = strings.TrimSpace(s.cfg.DownloadBaseURL)
+	}
+	if downloadBaseURL == "" {
+		requestBaseURL = strings.TrimSpace(requestBaseURL)
+		if requestBaseURL != "" {
+			downloadBaseURL = strings.TrimRight(requestBaseURL, "/") + "/downloads"
+		}
 	}
 	if downloadBaseURL == "" {
 		return "", ErrInstallForbidden
@@ -962,6 +971,20 @@ func deriveDeployProgressURLFromHubWSURL(rawHubURL string) string {
 	return parsed.String()
 }
 
+func buildInstallScriptURL(requestBaseURL, nodeID, installToken string) string {
+	baseURL := strings.TrimRight(strings.TrimSpace(requestBaseURL), "/")
+	if baseURL == "" || strings.TrimSpace(nodeID) == "" || strings.TrimSpace(installToken) == "" {
+		return ""
+	}
+
+	return fmt.Sprintf(
+		"%s/api/v1/nodes/%s/install.sh?installToken=%s",
+		baseURL,
+		url.PathEscape(strings.TrimSpace(nodeID)),
+		url.QueryEscape(strings.TrimSpace(installToken)),
+	)
+}
+
 func deriveHubWSURLFromDownloadBaseURL(downloadBaseURL string) string {
 	parsed, err := url.Parse(strings.TrimSpace(downloadBaseURL))
 	if err != nil || parsed.Host == "" {
@@ -979,7 +1002,7 @@ func deriveHubWSURLFromDownloadBaseURL(downloadBaseURL string) string {
 
 	parsed.RawQuery = ""
 	parsed.Fragment = ""
-	parsed.Path = "/ws"
+	parsed.Path = "/ws/agent"
 	return parsed.String()
 }
 
@@ -1054,6 +1077,19 @@ func normalizeNodeListPage(page, pageSize int) (int, int) {
 		pageSize = nodeListMaxPageSize
 	}
 	return page, pageSize
+}
+
+func clampIntToInt32(v int) int32 {
+	const maxInt32 = int(^uint32(0) >> 1)
+	const minInt32 = -maxInt32 - 1
+
+	if v > maxInt32 {
+		return int32(maxInt32)
+	}
+	if v < minInt32 {
+		return int32(minInt32)
+	}
+	return int32(v)
 }
 
 func generateHexToken(byteLen int) (string, error) {

@@ -2,10 +2,11 @@ package service
 
 import (
 	"context"
+	crand "crypto/rand"
 	"errors"
 	"fmt"
 	"hash/fnv"
-	"math/rand"
+	"math/big"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -51,8 +52,6 @@ type LeastConnSelector struct {
 
 type RandomSelector struct {
 	members []*model.LBGroupMember
-	rnd     *rand.Rand
-	mu      sync.Mutex
 }
 
 type IPHashSelector struct {
@@ -148,7 +147,6 @@ func NewSelector(strategy string, members []*model.LBGroupMember) Selector {
 	case "random":
 		return &RandomSelector{
 			members: members,
-			rnd:     rand.New(rand.NewSource(time.Now().UnixNano())),
 		}
 	case "ip_hash":
 		return &IPHashSelector{members: members}
@@ -211,9 +209,12 @@ func (s *RandomSelector) Select(_ string) (*model.LBGroupMember, error) {
 		return nil, ErrLBNoActiveMembers
 	}
 
-	s.mu.Lock()
-	idx := s.rnd.Intn(len(active))
-	s.mu.Unlock()
+	max := big.NewInt(int64(len(active)))
+	n, err := crand.Int(crand.Reader, max)
+	if err != nil {
+		return nil, err
+	}
+	idx := int(n.Int64())
 
 	return active[idx], nil
 }
@@ -231,7 +232,7 @@ func (s *IPHashSelector) Select(clientIP string) (*model.LBGroupMember, error) {
 
 	hasher := fnv.New32a()
 	_, _ = hasher.Write([]byte(trimmedIP))
-	idx := int(hasher.Sum32() % uint32(len(active)))
+	idx := int(int64(hasher.Sum32()) % int64(len(active)))
 	return active[idx], nil
 }
 

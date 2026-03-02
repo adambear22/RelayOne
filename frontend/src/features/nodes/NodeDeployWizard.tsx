@@ -467,7 +467,7 @@ function fieldErrorStatus(errors: FieldErrors<WizardFormValues>, field: keyof Wi
 
 function buildInstallCommand(node: CreateNodeResponse): string {
   const installURL = resolveInstallURL(node)
-  return `curl -fsSL "${installURL}" | bash`
+  return `bash <(curl -fsSL "${installURL}")`
 }
 
 function resolveInstallURL(node: CreateNodeResponse): string {

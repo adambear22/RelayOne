@@ -23,8 +23,8 @@ type NotificationTemplate string
 
 const (
 	NotificationQuotaExceeded NotificationTemplate = "quota_exceeded"
-	NotificationVIPWarning7D  NotificationTemplate = "vip_expiry_warning_7d"
-	NotificationVIPWarning1D  NotificationTemplate = "vip_expiry_warning_1d"
+	NotificationVIPWarning7D  NotificationTemplate = "vip_expiry_warning_7d" // #nosec G101 -- template identifier, not a credential.
+	NotificationVIPWarning1D  NotificationTemplate = "vip_expiry_warning_1d" // #nosec G101 -- template identifier, not a credential.
 	NotificationNodeOffline   NotificationTemplate = "node_offline"
 	NotificationRuleSyncFail  NotificationTemplate = "rule_sync_failed"
 	NotificationCodeRedeemed  NotificationTemplate = "code_redeemed"

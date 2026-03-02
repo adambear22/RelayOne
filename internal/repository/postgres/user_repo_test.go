@@ -160,6 +160,7 @@ func applyAllMigrations(t *testing.T, ctx context.Context, pool *pgxpool.Pool) {
 	sort.Strings(files)
 
 	for _, file := range files {
+		// #nosec G304 -- migration file list comes from controlled test directory.
 		raw, err := os.ReadFile(filepath.Join(migrationsDir, file))
 		if err != nil {
 			t.Fatalf("read migration %s: %v", file, err)

@@ -144,7 +144,7 @@ func (r *benefitCodeRepository) BatchCreate(ctx context.Context, benefitCodes []
 	results := tx.SendBatch(ctx, batch)
 	for range benefitCodes {
 		if _, err := results.Exec(); err != nil {
-			results.Close() //nolint:errcheck
+			_ = results.Close()
 			return err
 		}
 	}

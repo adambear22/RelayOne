@@ -1,0 +1,29 @@
+groups:
+  - name: nodepass-hub-alerts
+    rules:
+      - alert: NodePassHubDown
+        expr: up{job="nodepass-hub"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "NodePass Hub is down"
+          description: "Prometheus cannot scrape NodePass Hub metrics for over 1 minute."
+
+      - alert: NodePassRuleSyncErrorsHigh
+        expr: increase(nodepass_rule_sync_errors_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "NodePass rule sync errors increased"
+          description: "Rule sync error counter increased by more than 5 in the last 5 minutes."
+
+      - alert: NodePassOverlimitUsersDetected
+        expr: nodepass_overlimit_users > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "NodePass has overlimit users"
+          description: "Current overlimit users is {{ $value }} for more than 10 minutes."

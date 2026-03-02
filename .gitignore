@@ -13,9 +13,13 @@ frontend/.env*.local
 # Agent build
 nodepass-agent/bin/
 nodepass-agent/assets/*.binary
+nodepass-agent/embed/nodepass_linux_amd64
+nodepass-agent/embed/nodepass_linux_arm64
+nodepass-agent/embed/nodepass_linux_386
 
 # Config and secrets (do not commit)
 config.yaml
+deploy.conf
 .env
 .env.*
 *.pem
@@ -34,6 +38,7 @@ deploy/backups/*
 deploy/secrets/*
 !deploy/secrets/.gitkeep
 scripts/dev-keys/
+monitoring/secrets/
 
 # IDE
 .idea/

@@ -6,20 +6,16 @@ ARG NODEPASS_UPSTREAM=NodePassProject/nodepass
 RUN apk add --no-cache ca-certificates wget tar
 RUN set -eux; \
     ARCH_SUFFIX="${TARGETARCH}"; \
-    if [ "${TARGETARCH}" = "arm" ]; then ARCH_SUFFIX="armv7"; fi; \
+    if [ "${TARGETARCH}" = "arm" ]; then echo "unsupported TARGETARCH=arm"; exit 1; fi; \
     VERSION_TAG="${NODEPASS_VERSION}"; \
     if [ "${VERSION_TAG}" = "latest" ]; then \
       VERSION_TAG="$(wget -qO- "https://api.github.com/repos/${NODEPASS_UPSTREAM}/releases/latest" | sed -n 's/.*\"tag_name\": *\"\\([^\"]*\\)\".*/\\1/p' | head -n1)"; \
     fi; \
-    if [ "${ARCH_SUFFIX}" = "armv7" ]; then \
-      printf '#!/bin/sh\necho "nodepass placeholder armv7"\n' > /nodepass; \
-    else \
-      VERSION_NO_V="${VERSION_TAG#v}"; \
-      TARBALL="nodepass_${VERSION_NO_V}_linux_${ARCH_SUFFIX}.tar.gz"; \
-      wget -O /tmp/nodepass.tgz "https://github.com/${NODEPASS_UPSTREAM}/releases/download/${VERSION_TAG}/${TARBALL}"; \
-      tar -xzf /tmp/nodepass.tgz -C /tmp; \
-      mv /tmp/nodepass /nodepass; \
-    fi; \
+    VERSION_NO_V="${VERSION_TAG#v}"; \
+    TARBALL="nodepass_${VERSION_NO_V}_linux_${ARCH_SUFFIX}.tar.gz"; \
+    wget -O /tmp/nodepass.tgz "https://github.com/${NODEPASS_UPSTREAM}/releases/download/${VERSION_TAG}/${TARBALL}"; \
+    tar -xzf /tmp/nodepass.tgz -C /tmp; \
+    mv /tmp/nodepass /nodepass; \
     chmod +x /nodepass
 
 FROM golang:1.22-alpine AS go-deps
@@ -33,45 +29,35 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 ARG VERSION=dev
 ARG COMMIT=unknown
+ARG BUILD_TIME=unknown
 COPY nodepass-agent/ .
 COPY --from=embed-prep /nodepass /tmp/nodepass
 RUN set -eux; \
     EMBED_ARCH="${TARGETARCH}"; \
-    GOARM_VALUE=""; \
-    if [ "${TARGETARCH}" = "arm" ]; then \
-      EMBED_ARCH="armv7"; \
-      GOARM_VALUE="${TARGETVARIANT#v}"; \
-      if [ -z "${GOARM_VALUE}" ]; then GOARM_VALUE="7"; fi; \
-    fi; \
-    cp /tmp/nodepass "./assets/nodepass-linux-${EMBED_ARCH}"; \
-    chmod +x "./assets/nodepass-linux-${EMBED_ARCH}"; \
-    NODEPASS_SHA="$(sha256sum "./assets/nodepass-linux-${EMBED_ARCH}" | awk '{print $1}')"; \
-    if [ "${TARGETARCH}" = "arm" ]; then \
-      sed -i "s|\"arm\":[[:space:]]*\"[^\"]*\"|\"arm\":   \"${NODEPASS_SHA}\"|" embed.go; \
-      sed -i "s|\"armv7\":[[:space:]]*\"[^\"]*\"|\"armv7\": \"${NODEPASS_SHA}\"|" embed.go; \
-    else \
-      sed -i "s|\"${TARGETARCH}\":[[:space:]]*\"[^\"]*\"|\"${TARGETARCH}\": \"${NODEPASS_SHA}\"|" embed.go; \
-    fi; \
-    if [ "${TARGETARCH}" = "arm" ]; then export GOARM="${GOARM_VALUE}"; fi; \
+    if [ "${TARGETARCH}" = "arm" ]; then echo "unsupported TARGETARCH=arm"; exit 1; fi; \
+    cp /tmp/nodepass "./embed/nodepass_linux_${EMBED_ARCH}"; \
+    chmod +x "./embed/nodepass_linux_${EMBED_ARCH}"; \
     CGO_ENABLED=0 GOOS=linux GOARCH="${TARGETARCH}" go build \
-      -ldflags="-s -w -X main.Version=${VERSION} -X main.Commit=${COMMIT}" \
+      -ldflags="-s -w -X main.Version=${VERSION} -X main.BuildTime=${BUILD_TIME}" \
       -o /nodepass-agent ./cmd/agent
 
 FROM gcr.io/distroless/static-debian12 AS final
 COPY --from=builder /nodepass-agent /nodepass-agent
 USER nonroot:nonroot
 ENV HUB_WS_URL=""
+ENV HUB_URL=""
 ENV AGENT_ID=""
 ENV AGENT_TOKEN=""
+ENV INTERNAL_TOKEN=""
 HEALTHCHECK --interval=60s --timeout=10s --start-period=30s \
   CMD ["/nodepass-agent", "healthcheck"]
 ENTRYPOINT ["/nodepass-agent"]
 
 # This Dockerfile is intended for docker buildx multi-arch builds:
 # docker buildx build \
-#   --platform linux/amd64,linux/arm64,linux/arm/v7 \
+#   --platform linux/amd64,linux/arm64,linux/386 \
 #   --build-arg NODEPASS_VERSION=v1.x.x \
 #   --build-arg VERSION=$(git describe --tags) \
 #   -f docker/Dockerfile.agent \
-#   -t ghcr.io/<ORG>/nodepass-agent:latest \
+#   -t ghcr.io/adambear22/nodepass-agent:latest \
 #   --push .

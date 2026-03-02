@@ -67,6 +67,18 @@ func intPtrToInt16Ptr(v *int) *int16 {
 	if v == nil {
 		return nil
 	}
-	out := int16(*v)
+
+	const maxInt16 = int(^uint16(0) >> 1)
+	const minInt16 = -maxInt16 - 1
+
+	value := *v
+	if value > maxInt16 {
+		value = maxInt16
+	}
+	if value < minInt16 {
+		value = minInt16
+	}
+
+	out := int16(value)
 	return &out
 }
