@@ -252,6 +252,7 @@ setup_deploy_dir() {
 download_file_if_modified() {
   local remote_url="$1"
   local target_path="$2"
+  local optional="${3:-0}"
   local tmp_file
   local http_code
 
@@ -269,6 +270,11 @@ download_file_if_modified() {
   fi
 
   if [[ "${http_code}" != "200" ]]; then
+    if [[ "${optional}" == "1" && "${http_code}" == "404" ]]; then
+      rm -f "${tmp_file}"
+      log_warn "可选文件不存在，跳过: ${remote_url}"
+      return 1
+    fi
     rm -f "${tmp_file}"
     log_error "下载失败（HTTP ${http_code}）: ${remote_url}"
     exit 1
@@ -282,9 +288,11 @@ download_files() {
   download_file_if_modified "${REPO_URL}/deploy/docker-compose.yml" "${INSTALL_DIR}/docker-compose.yml"
   download_file_if_modified "${REPO_URL}/deploy/Caddyfile" "${INSTALL_DIR}/Caddyfile"
   download_file_if_modified "${REPO_URL}/deploy/upgrade.sh" "${INSTALL_DIR}/upgrade.sh"
-  download_file_if_modified "${REPO_URL}/deploy/update.sh" "${INSTALL_DIR}/update.sh"
   chmod +x "${INSTALL_DIR}/upgrade.sh"
-  chmod +x "${INSTALL_DIR}/update.sh"
+
+  if download_file_if_modified "${REPO_URL}/deploy/update.sh" "${INSTALL_DIR}/update.sh" 1; then
+    chmod +x "${INSTALL_DIR}/update.sh"
+  fi
 
   download_file_if_modified "${REPO_URL}/deploy/.env.example" "${INSTALL_DIR}/.env.example"
 
@@ -923,7 +931,9 @@ print_summary() {
   echo -e "  查看日志:   docker compose -f ${COMPOSE_FILE} --env-file ${ENV_FILE} logs -f"
   echo -e "  重启服务:   systemctl restart nodepass"
   echo -e "  升级版本:   bash ${INSTALL_DIR}/upgrade.sh <version>"
-  echo -e "  一键更新:   bash ${INSTALL_DIR}/update.sh --version latest"
+  if [[ -x "${INSTALL_DIR}/update.sh" ]]; then
+    echo -e "  一键更新:   bash ${INSTALL_DIR}/update.sh --version latest"
+  fi
   echo ""
 }
 
