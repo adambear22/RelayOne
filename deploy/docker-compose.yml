@@ -32,6 +32,8 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
       NODEPASS_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
       NODEPASS_SECURITY_AGENT_HMAC_SECRET_FILE: /run/secrets/agent_hmac_secret
+    volumes:
+      - ./config.yaml:/config.yaml:ro
     secrets:
       - agent_hmac_secret
     depends_on:
@@ -65,6 +67,7 @@ services:
       - telegram_bot_token
       - external_api_key
     volumes:
+      - ./config.yaml:/config.yaml:ro
       - hub_data:/data
     depends_on:
       migrate:

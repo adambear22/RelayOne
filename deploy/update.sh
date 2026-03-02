@@ -206,6 +206,46 @@ check_required_secrets() {
   fi
 }
 
+get_env_var_from_file() {
+  local key="$1"
+  local env_file="$2"
+  grep -E "^${key}=" "${env_file}" | tail -1 | cut -d '=' -f2-
+}
+
+write_app_config_from_env() {
+  local deploy_dir="$1"
+  local env_file="${deploy_dir}/.env"
+  local config_file="${deploy_dir}/config.yaml"
+  local db_user db_password db_name domain
+  local tmp_file
+
+  db_user="$(get_env_var_from_file "POSTGRES_USER" "${env_file}")"
+  db_password="$(get_env_var_from_file "POSTGRES_PASSWORD" "${env_file}")"
+  db_name="$(get_env_var_from_file "POSTGRES_DB" "${env_file}")"
+  domain="$(get_env_var_from_file "DOMAIN" "${env_file}")"
+
+  tmp_file="$(mktemp)"
+  cat > "${tmp_file}" <<EOF
+app:
+  env: production
+server:
+  host: 0.0.0.0
+  port: 8080
+database:
+  url: postgres://${db_user}:${db_password}@postgres:5432/${db_name:-nodepass_hub}?sslmode=disable
+security:
+  agent_hmac_secret_file: /run/secrets/agent_hmac_secret
+  internal_token_file: /run/secrets/internal_token
+cors:
+  allow_origins:
+    - https://${domain}
+    - http://localhost:5173
+EOF
+
+  install -m 600 "${tmp_file}" "${config_file}"
+  rm -f "${tmp_file}"
+}
+
 main() {
   parse_args "$@"
   detect_install_dir
@@ -264,6 +304,7 @@ main() {
   fi
 
   check_required_secrets "${INSTALL_DIR}/secrets"
+  write_app_config_from_env "${INSTALL_DIR}"
 
   echo "Running upgrade to version: ${TARGET_VERSION}"
   bash "${INSTALL_DIR}/upgrade.sh" "${TARGET_VERSION}"

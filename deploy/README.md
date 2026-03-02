@@ -139,3 +139,9 @@ bash scripts/deploy.sh --config /path/to/deploy.conf
    ```bash
    docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d --no-deps hub frontend
    ```
+
+## 常见问题
+
+- `load config failed: database.url is required`  
+  说明 Hub 镜像未从环境变量读取到数据库地址。新版部署脚本会自动生成 `config.yaml`。  
+  先重新执行 setup/update，再重试迁移。

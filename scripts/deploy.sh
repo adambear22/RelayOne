@@ -14,6 +14,7 @@ SECRET_RUNTIME_UID="${SECRET_RUNTIME_UID:-65532}"
 SECRET_RUNTIME_GID="${SECRET_RUNTIME_GID:-65532}"
 SECRET_OWNER_WARNED=0
 DEPLOY_INFO_FILE=""
+APP_CONFIG_FILE="${DEPLOY_DIR}/config.yaml"
 
 usage() {
   cat <<'USAGE'
@@ -54,6 +55,7 @@ parse_args() {
   fi
 
   DEPLOY_INFO_FILE="${DEPLOY_DIR}/deploy-info.txt"
+  APP_CONFIG_FILE="${DEPLOY_DIR}/config.yaml"
 }
 
 require_root() {
@@ -511,6 +513,31 @@ EOF_INNER
   mv "${tmp_file}" "${env_file}"
 }
 
+write_app_config() {
+  local tmp_file
+  tmp_file="$(mktemp)"
+
+  cat > "${tmp_file}" <<EOF_INNER
+app:
+  env: production
+server:
+  host: 0.0.0.0
+  port: 8080
+database:
+  url: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-nodepass_hub}?sslmode=disable
+security:
+  agent_hmac_secret_file: /run/secrets/agent_hmac_secret
+  internal_token_file: /run/secrets/internal_token
+cors:
+  allow_origins:
+    - https://${DOMAIN}
+    - http://localhost:5173
+EOF_INNER
+
+  chmod 600 "${tmp_file}"
+  mv "${tmp_file}" "${APP_CONFIG_FILE}"
+}
+
 decode_b64_to_file() {
   local value="$1"
   local out_file="$2"
@@ -547,6 +574,7 @@ harden_secret_file() {
 
 write_runtime_files() {
   write_env_file
+  write_app_config
   install -m 600 "${CONFIG_FILE}" "${DEPLOY_DIR}/deploy.conf"
 
   decode_b64_to_file "${JWT_PRIVATE_KEY_B64}" "${DEPLOY_DIR}/secrets/jwt_private.pem"

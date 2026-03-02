@@ -54,6 +54,7 @@ SCRIPT_ARGS=("$@")
 COMPOSE_FILE="${INSTALL_DIR}/docker-compose.yml"
 ENV_FILE="${INSTALL_DIR}/.env"
 SECRETS_DIR="${INSTALL_DIR}/secrets"
+CONFIG_FILE_PATH="${INSTALL_DIR}/config.yaml"
 DEPLOY_INFO_FILE="${INSTALL_DIR}/deploy-info.txt"
 
 OS_NAME=""
@@ -392,6 +393,37 @@ ensure_env_image_vars() {
   if [[ "${changed}" -eq 1 ]]; then
     log_ok ".env 镜像地址已自动修正为 ghcr.io/${owner}/nodepass-*"
   fi
+}
+
+write_app_config() {
+  local db_user db_password db_name domain
+  local tmp_file
+  db_user="$(get_env_var POSTGRES_USER)"
+  db_password="$(get_env_var POSTGRES_PASSWORD)"
+  db_name="$(get_env_var POSTGRES_DB)"
+  domain="$(get_env_var DOMAIN)"
+
+  tmp_file="$(mktemp)"
+  cat > "${tmp_file}" <<EOF
+app:
+  env: production
+server:
+  host: 0.0.0.0
+  port: 8080
+database:
+  url: postgres://${db_user}:${db_password}@postgres:5432/${db_name:-nodepass_hub}?sslmode=disable
+security:
+  agent_hmac_secret_file: /run/secrets/agent_hmac_secret
+  internal_token_file: /run/secrets/internal_token
+cors:
+  allow_origins:
+    - https://${domain}
+    - http://localhost:5173
+EOF
+
+  chmod 600 "${tmp_file}"
+  mv "${tmp_file}" "${CONFIG_FILE_PATH}"
+  log_ok "应用配置已写入: ${CONFIG_FILE_PATH}"
 }
 
 validate_domain() {
@@ -1023,6 +1055,7 @@ main() {
 
   log_step "Step 4/9  生成密钥材料"
   generate_secrets
+  write_app_config
 
   log_step "Step 5/9  拉取 Docker 镜像"
   pull_images
