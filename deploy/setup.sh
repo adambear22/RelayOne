@@ -46,6 +46,8 @@ read_tty_secret() {
 REPO_URL="${REPO_URL:-https://raw.githubusercontent.com/adambear22/RelayOne/main}"
 INSTALL_DIR="${INSTALL_DIR:-/opt/nodepass}"
 COMPOSE_VERSION="${COMPOSE_VERSION:-v2.27.0}"
+SECRET_RUNTIME_UID="${SECRET_RUNTIME_UID:-65532}"
+SECRET_RUNTIME_GID="${SECRET_RUNTIME_GID:-65532}"
 REPO_URL="${REPO_URL%/}"
 
 SCRIPT_ARGS=("$@")
@@ -63,6 +65,7 @@ SETUP_INTERRUPTED=0
 SERVICES_STARTED=0
 POSTGRES_STARTED=0
 ENV_WAS_CREATED=0
+SECRET_OWNER_WARNED=0
 
 cleanup() {
   if [[ "${SETUP_INTERRUPTED}" -eq 1 ]]; then
@@ -655,6 +658,19 @@ write_secret_atomic() {
   mv "${tmp}" "${target}"
 }
 
+ensure_secret_access() {
+  local file_path="$1"
+  [[ -f "${file_path}" ]] || return 0
+
+  chmod 600 "${file_path}"
+  if ! chown "${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}" "${file_path}" >/dev/null 2>&1; then
+    if [[ "${SECRET_OWNER_WARNED}" -eq 0 ]]; then
+      log_warn "无法设置 secret 所有者为 ${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}，非 root 容器可能无法读取"
+      SECRET_OWNER_WARNED=1
+    fi
+  fi
+}
+
 generate_secrets() {
   mkdir -p "${SECRETS_DIR}"
   chmod 700 "${SECRETS_DIR}"
@@ -703,6 +719,13 @@ generate_secrets() {
     write_secret_atomic "${SECRETS_DIR}/telegram_bot_token.txt" 600 ""
     log_warn "未提供 Telegram Token，已创建空 secret 文件"
   fi
+
+  ensure_secret_access "${SECRETS_DIR}/jwt_private.pem"
+  ensure_secret_access "${SECRETS_DIR}/jwt_public.pem"
+  ensure_secret_access "${SECRETS_DIR}/agent_hmac_secret.txt"
+  ensure_secret_access "${SECRETS_DIR}/external_api_key.txt"
+  ensure_secret_access "${SECRETS_DIR}/internal_token.txt"
+  ensure_secret_access "${SECRETS_DIR}/telegram_bot_token.txt"
 }
 
 extract_agent_binary() {

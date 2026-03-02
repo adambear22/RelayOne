@@ -100,6 +100,12 @@ bash scripts/deploy.sh --config /path/to/deploy.conf
   bash /opt/nodepass/update.sh --version latest
   ```
 
+- 如果迁移报错 `permission denied: /run/secrets/...`（非 root 容器读取 secret 失败）：
+  ```bash
+  sudo chown 65532:65532 /opt/nodepass/secrets/*
+  sudo chmod 600 /opt/nodepass/secrets/*
+  ```
+
 - 使用交互式升级脚本：
   ```bash
   bash scripts/upgrade.sh

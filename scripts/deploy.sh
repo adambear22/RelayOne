@@ -10,6 +10,9 @@ source "${SCRIPT_DIR}/wizard_ui.sh"
 TOTAL_STEPS=8
 CONFIG_FILE="deploy.conf"
 DEPLOY_DIR="/opt/nodepass"
+SECRET_RUNTIME_UID="${SECRET_RUNTIME_UID:-65532}"
+SECRET_RUNTIME_GID="${SECRET_RUNTIME_GID:-65532}"
+SECRET_OWNER_WARNED=0
 
 usage() {
   cat <<'USAGE'
@@ -525,7 +528,18 @@ write_secret_file() {
   local file_path="$1"
   local content="$2"
   printf '%s' "${content}" > "${file_path}"
+  harden_secret_file "${file_path}"
+}
+
+harden_secret_file() {
+  local file_path="$1"
   chmod 600 "${file_path}"
+  if ! chown "${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}" "${file_path}" >/dev/null 2>&1; then
+    if [[ "${SECRET_OWNER_WARNED}" -eq 0 ]]; then
+      warn "无法设置 secret 所有者为 ${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}，非 root 容器可能无法读取"
+      SECRET_OWNER_WARNED=1
+    fi
+  fi
 }
 
 write_runtime_files() {
@@ -535,7 +549,8 @@ write_runtime_files() {
   decode_b64_to_file "${JWT_PRIVATE_KEY_B64}" "${DEPLOY_DIR}/secrets/jwt_private.pem"
   decode_b64_to_file "${JWT_PUBLIC_KEY_B64}" "${DEPLOY_DIR}/secrets/jwt_public.pem"
 
-  chmod 600 "${DEPLOY_DIR}/secrets/jwt_private.pem" "${DEPLOY_DIR}/secrets/jwt_public.pem"
+  harden_secret_file "${DEPLOY_DIR}/secrets/jwt_private.pem"
+  harden_secret_file "${DEPLOY_DIR}/secrets/jwt_public.pem"
   write_secret_file "${DEPLOY_DIR}/secrets/internal_token.txt" "${INTERNAL_TOKEN}"
   write_secret_file "${DEPLOY_DIR}/secrets/agent_hmac_secret.txt" "${AGENT_HMAC_SECRET}"
   write_secret_file "${DEPLOY_DIR}/secrets/external_api_key.txt" "${EXTERNAL_API_KEY}"
@@ -543,8 +558,7 @@ write_runtime_files() {
   if [[ "${ENABLE_TELEGRAM}" == "true" ]]; then
     write_secret_file "${DEPLOY_DIR}/secrets/telegram_bot_token.txt" "${TELEGRAM_BOT_TOKEN}"
   else
-    : > "${DEPLOY_DIR}/secrets/telegram_bot_token.txt"
-    chmod 600 "${DEPLOY_DIR}/secrets/telegram_bot_token.txt"
+    write_secret_file "${DEPLOY_DIR}/secrets/telegram_bot_token.txt" ""
   fi
 
   success "环境变量和密钥文件已生成"

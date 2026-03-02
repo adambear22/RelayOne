@@ -7,6 +7,8 @@ REPO_REF="${REPO_REF:-main}"
 TARGET_VERSION="${TARGET_VERSION:-latest}"
 SKIP_UPGRADE=0
 INSTALL_DIR_EXPLICIT=0
+SECRET_RUNTIME_UID="${SECRET_RUNTIME_UID:-65532}"
+SECRET_RUNTIME_GID="${SECRET_RUNTIME_GID:-65532}"
 
 usage() {
   cat <<'USAGE'
@@ -163,6 +165,7 @@ detect_install_dir() {
 check_required_secrets() {
   local secrets_dir="$1"
   local missing=0
+  local owner_warned=0
   local file
   local required_files=(
     jwt_private.pem
@@ -184,6 +187,18 @@ check_required_secrets() {
     chmod 600 "${secrets_dir}/telegram_bot_token.txt"
     echo "Created optional secret placeholder: ${secrets_dir}/telegram_bot_token.txt"
   fi
+
+  for file in "${required_files[@]}" telegram_bot_token.txt; do
+    if [[ -f "${secrets_dir}/${file}" ]]; then
+      chmod 600 "${secrets_dir}/${file}" || true
+      if ! chown "${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}" "${secrets_dir}/${file}" >/dev/null 2>&1; then
+        if [[ "${owner_warned}" -eq 0 ]]; then
+          echo "Warning: failed to set secret owner to ${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}" >&2
+          owner_warned=1
+        fi
+      fi
+    fi
+  done
 
   if [[ "${missing}" -eq 1 ]]; then
     echo "Deployment is not fully initialized. Please run deploy/setup.sh first." >&2
