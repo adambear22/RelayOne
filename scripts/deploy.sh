@@ -13,6 +13,7 @@ DEPLOY_DIR="/opt/nodepass"
 SECRET_RUNTIME_UID="${SECRET_RUNTIME_UID:-65532}"
 SECRET_RUNTIME_GID="${SECRET_RUNTIME_GID:-65532}"
 SECRET_OWNER_WARNED=0
+DEPLOY_INFO_FILE=""
 
 usage() {
   cat <<'USAGE'
@@ -51,6 +52,8 @@ parse_args() {
   if [[ "${CONFIG_FILE}" != /* ]]; then
     CONFIG_FILE="$(pwd)/${CONFIG_FILE}"
   fi
+
+  DEPLOY_INFO_FILE="${DEPLOY_DIR}/deploy-info.txt"
 }
 
 require_root() {
@@ -651,7 +654,38 @@ print_access_info() {
   echo -e "  ${BOLD}API 文档：${NC} ${scheme}://${DOMAIN}/api/docs"
   echo -e "  ${BOLD}管理员账号：${NC} ${ADMIN_USERNAME}"
   echo -e "  ${BOLD}部署目录：${NC} ${DEPLOY_DIR}"
+  echo -e "  ${BOLD}部署信息文件：${NC} ${DEPLOY_INFO_FILE}"
   divider
+}
+
+write_deploy_info() {
+  local scheme now
+  scheme="https"
+  if [[ "${TLS_MODE:-1}" == "3" ]]; then
+    scheme="http"
+  fi
+  now="$(date '+%Y-%m-%d %H:%M:%S %Z')"
+
+  cat > "${DEPLOY_INFO_FILE}" <<EOF
+NodePass Deployment Info
+Generated: ${now}
+
+Site URL: ${scheme}://${DOMAIN}
+Admin URL: ${scheme}://${DOMAIN}/admin
+API Docs: ${scheme}://${DOMAIN}/api/docs
+Admin User: ${ADMIN_USERNAME}
+Deploy Dir: ${DEPLOY_DIR}
+Compose File: ${DEPLOY_DIR}/docker-compose.yml
+Env File: ${DEPLOY_DIR}/.env
+
+Common Commands:
+- cd ${DEPLOY_DIR} && docker compose ps
+- cd ${DEPLOY_DIR} && docker compose logs -f
+- bash ${DEPLOY_DIR}/upgrade.sh
+EOF
+
+  chmod 600 "${DEPLOY_INFO_FILE}"
+  success "部署信息已写入：${DEPLOY_INFO_FILE}"
 }
 
 main() {
@@ -687,6 +721,7 @@ main() {
   create_admin
   verify_endpoint
 
+  write_deploy_info
   success "部署完成！"
   print_access_info
   warn "请妥善保存配置文件：${CONFIG_FILE}"

@@ -54,6 +54,7 @@ SCRIPT_ARGS=("$@")
 COMPOSE_FILE="${INSTALL_DIR}/docker-compose.yml"
 ENV_FILE="${INSTALL_DIR}/.env"
 SECRETS_DIR="${INSTALL_DIR}/secrets"
+DEPLOY_INFO_FILE="${INSTALL_DIR}/deploy-info.txt"
 
 OS_NAME=""
 OS_VERSION=""
@@ -949,6 +950,7 @@ print_summary() {
   echo -e "  外部 API 密钥:     ${BOLD}${external_key}${NC}"
   echo -e "  内部接口令牌:      ${INSTALL_DIR}/secrets/internal_token.txt"
   echo -e "  JWT 私钥:          ${INSTALL_DIR}/secrets/jwt_private.pem"
+  echo -e "  部署信息文件:      ${DEPLOY_INFO_FILE}"
   echo ""
   echo -e "${BOLD}  常用命令：${NC}"
   echo -e "  查看日志:   docker compose -f ${COMPOSE_FILE} --env-file ${ENV_FILE} logs -f"
@@ -958,6 +960,43 @@ print_summary() {
     echo -e "  一键更新:   bash ${INSTALL_DIR}/update.sh --version latest"
   fi
   echo ""
+}
+
+write_deploy_info() {
+  local scheme domain_value now
+  domain_value="${DOMAIN:-$(get_env_var DOMAIN)}"
+  scheme="https"
+  now="$(date '+%Y-%m-%d %H:%M:%S %Z')"
+
+  cat > "${DEPLOY_INFO_FILE}" <<EOF
+NodePass Deployment Info
+Generated: ${now}
+
+Site URL: ${scheme}://${domain_value}
+Admin URL: ${scheme}://${domain_value}/admin
+API Docs: ${scheme}://${domain_value}/api/docs
+Admin User: ${ADMIN_USER}
+Deploy Dir: ${INSTALL_DIR}
+Compose File: ${COMPOSE_FILE}
+Env File: ${ENV_FILE}
+
+Secrets:
+- ${SECRETS_DIR}/jwt_private.pem
+- ${SECRETS_DIR}/jwt_public.pem
+- ${SECRETS_DIR}/agent_hmac_secret.txt
+- ${SECRETS_DIR}/internal_token.txt
+- ${SECRETS_DIR}/external_api_key.txt
+- ${SECRETS_DIR}/telegram_bot_token.txt
+
+Common Commands:
+- docker compose -f ${COMPOSE_FILE} --env-file ${ENV_FILE} logs -f
+- docker compose -f ${COMPOSE_FILE} --env-file ${ENV_FILE} ps
+- bash ${INSTALL_DIR}/upgrade.sh <version>
+- bash ${INSTALL_DIR}/update.sh --version latest
+EOF
+
+  chmod 600 "${DEPLOY_INFO_FILE}"
+  log_ok "部署信息已写入: ${DEPLOY_INFO_FILE}"
 }
 
 main() {
@@ -1000,6 +1039,7 @@ main() {
   log_step "Step 9/9  配置开机自启"
   setup_systemd
 
+  write_deploy_info
   print_summary
 }
 
