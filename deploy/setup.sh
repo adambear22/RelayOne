@@ -421,8 +421,12 @@ cors:
     - http://localhost:5173
 EOF
 
-  chmod 600 "${tmp_file}"
+  chmod 640 "${tmp_file}"
   mv "${tmp_file}" "${CONFIG_FILE_PATH}"
+  if ! chown "${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}" "${CONFIG_FILE_PATH}" >/dev/null 2>&1; then
+    chmod 644 "${CONFIG_FILE_PATH}"
+    log_warn "无法设置 config.yaml 所有者，已回退为 644 以确保容器可读"
+  fi
   log_ok "应用配置已写入: ${CONFIG_FILE_PATH}"
 }
 

@@ -534,8 +534,12 @@ cors:
     - http://localhost:5173
 EOF_INNER
 
-  chmod 600 "${tmp_file}"
+  chmod 640 "${tmp_file}"
   mv "${tmp_file}" "${APP_CONFIG_FILE}"
+  if ! chown "${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}" "${APP_CONFIG_FILE}" >/dev/null 2>&1; then
+    chmod 644 "${APP_CONFIG_FILE}"
+    warn "无法设置 config.yaml 所有者，已回退为 644 以确保容器可读"
+  fi
 }
 
 decode_b64_to_file() {

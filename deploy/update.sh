@@ -242,7 +242,10 @@ cors:
     - http://localhost:5173
 EOF
 
-  install -m 600 "${tmp_file}" "${config_file}"
+  install -m 640 "${tmp_file}" "${config_file}"
+  if ! chown "${SECRET_RUNTIME_UID}:${SECRET_RUNTIME_GID}" "${config_file}" >/dev/null 2>&1; then
+    chmod 644 "${config_file}"
+  fi
   rm -f "${tmp_file}"
 }
 
