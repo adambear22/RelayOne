@@ -232,7 +232,7 @@ server:
   host: 0.0.0.0
   port: 8080
 database:
-  url: postgres://${db_user}:${db_password}@postgres:5432/${db_name:-nodepass_hub}?sslmode=disable
+  url: "postgres://${db_user}:${db_password}@postgres:5432/${db_name:-nodepass_hub}?sslmode=disable"
 security:
   agent_hmac_secret_file: /run/secrets/agent_hmac_secret
   internal_token_file: /run/secrets/internal_token
