@@ -112,29 +112,49 @@ is_nodepass_deploy_dir() {
   grep -qE 'nodepass-hub|HUB_IMAGE' "${compose_file}"
 }
 
+find_deploy_dir() {
+  local base="$1"
+
+  if is_nodepass_deploy_dir "${base}"; then
+    echo "${base}"
+    return 0
+  fi
+
+  if is_nodepass_deploy_dir "${base}/deploy"; then
+    echo "${base}/deploy"
+    return 0
+  fi
+
+  return 1
+}
+
 detect_install_dir() {
   local cwd
+  local detected
   cwd="$(pwd)"
 
   if [[ "${INSTALL_DIR_EXPLICIT}" -eq 1 ]]; then
+    if detected="$(find_deploy_dir "${INSTALL_DIR}")"; then
+      INSTALL_DIR="${detected}"
+    fi
     return 0
   fi
 
-  if is_nodepass_deploy_dir "${cwd}"; then
-    INSTALL_DIR="${cwd}"
+  if detected="$(find_deploy_dir "${cwd}")"; then
+    INSTALL_DIR="${detected}"
     return 0
   fi
 
-  if is_nodepass_deploy_dir "/opt/nodepass"; then
-    INSTALL_DIR="/opt/nodepass"
+  if detected="$(find_deploy_dir "/opt/nodepass")"; then
+    INSTALL_DIR="${detected}"
     return 0
   fi
 
   local candidate
   for candidate in /opt/*; do
     [[ -d "${candidate}" ]] || continue
-    if is_nodepass_deploy_dir "${candidate}"; then
-      INSTALL_DIR="${candidate}"
+    if detected="$(find_deploy_dir "${candidate}")"; then
+      INSTALL_DIR="${detected}"
       return 0
     fi
   done
@@ -183,7 +203,7 @@ main() {
   local raw_base
   raw_base="https://raw.githubusercontent.com/${REPO_SLUG}/${REPO_REF}"
 
-  echo "Using install directory: ${INSTALL_DIR}"
+  echo "Using deploy directory: ${INSTALL_DIR}"
 
   mkdir -p "${INSTALL_DIR}"
   if [[ ! -w "${INSTALL_DIR}" ]]; then
@@ -201,6 +221,7 @@ main() {
   backup_file_if_exists "${INSTALL_DIR}/upgrade.sh" "${backup_dir}"
   backup_file_if_exists "${INSTALL_DIR}/update.sh" "${backup_dir}"
   backup_file_if_exists "${INSTALL_DIR}/.env.example" "${backup_dir}"
+  backup_file_if_exists "${INSTALL_DIR}/.env" "${backup_dir}"
 
   echo "Syncing deploy files from ${REPO_SLUG}@${REPO_REF} ..."
   download "${raw_base}/deploy/docker-compose.yml" "${INSTALL_DIR}/docker-compose.yml" 644

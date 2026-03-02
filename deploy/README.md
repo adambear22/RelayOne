@@ -27,7 +27,7 @@ curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/upd
 curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/update.sh | sudo bash -s -- --ref codex/develop --version v1.2.3
 ```
 
-如果部署目录不是 `/opt/nodepass`（例如 `/opt/transitx`），请显式指定：
+如果部署目录不是 `/opt/nodepass`（例如 `/opt/transitx`），请显式指定（脚本会自动识别 `/opt/transitx` 或 `/opt/transitx/deploy`）：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/update.sh | sudo bash -s -- --install-dir /opt/transitx --version latest
