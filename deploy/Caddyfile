@@ -22,6 +22,16 @@
   }
 
   # WebSocket
+  handle /ws {
+    rewrite * /ws/agent
+    reverse_proxy hub:8080 {
+      transport http {
+        dial_timeout 5s
+        response_header_timeout 0
+      }
+    }
+  }
+
   handle /ws/* {
     reverse_proxy hub:8080 {
       transport http {
