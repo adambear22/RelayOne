@@ -282,7 +282,9 @@ download_files() {
   download_file_if_modified "${REPO_URL}/deploy/docker-compose.yml" "${INSTALL_DIR}/docker-compose.yml"
   download_file_if_modified "${REPO_URL}/deploy/Caddyfile" "${INSTALL_DIR}/Caddyfile"
   download_file_if_modified "${REPO_URL}/deploy/upgrade.sh" "${INSTALL_DIR}/upgrade.sh"
+  download_file_if_modified "${REPO_URL}/deploy/update.sh" "${INSTALL_DIR}/update.sh"
   chmod +x "${INSTALL_DIR}/upgrade.sh"
+  chmod +x "${INSTALL_DIR}/update.sh"
 
   download_file_if_modified "${REPO_URL}/deploy/.env.example" "${INSTALL_DIR}/.env.example"
 
@@ -921,6 +923,7 @@ print_summary() {
   echo -e "  查看日志:   docker compose -f ${COMPOSE_FILE} --env-file ${ENV_FILE} logs -f"
   echo -e "  重启服务:   systemctl restart nodepass"
   echo -e "  升级版本:   bash ${INSTALL_DIR}/upgrade.sh <version>"
+  echo -e "  一键更新:   bash ${INSTALL_DIR}/update.sh --version latest"
   echo ""
 }
 

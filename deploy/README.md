@@ -13,6 +13,20 @@
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/setup.sh)"
 ```
 
+## 一键更新（推荐）
+
+拉取最新部署文件并升级到 `latest`：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/update.sh | sudo bash -s -- --version latest
+```
+
+指定分支与版本：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/update.sh | sudo bash -s -- --ref codex/develop --version v1.2.3
+```
+
 ## 交互式部署向导（推荐）
 
 在仓库根目录执行：
@@ -73,6 +87,11 @@ bash scripts/deploy.sh --config /path/to/deploy.conf
 - 升级版本：
   ```bash
   bash deploy/upgrade.sh v1.2.3
+  ```
+
+- 一键更新（已部署服务器）：
+  ```bash
+  bash /opt/nodepass/update.sh --version latest
   ```
 
 - 使用交互式升级脚本：
