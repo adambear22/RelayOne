@@ -6,6 +6,7 @@ REPO_SLUG="${REPO_SLUG:-adambear22/RelayOne}"
 REPO_REF="${REPO_REF:-main}"
 TARGET_VERSION="${TARGET_VERSION:-latest}"
 SKIP_UPGRADE=0
+INSTALL_DIR_EXPLICIT=0
 
 usage() {
   cat <<'USAGE'
@@ -16,7 +17,7 @@ Options:
   --version <tag>      Upgrade target version tag (default: latest)
   --ref <git-ref>      Git ref for raw files (default: main)
   --repo <owner/repo>  GitHub repo slug (default: adambear22/RelayOne)
-  --install-dir <dir>  Install directory (default: /opt/nodepass)
+  --install-dir <dir>  Install directory (default: auto-detect, fallback /opt/nodepass)
   --skip-upgrade       Only sync deploy files, skip image upgrade
   -h, --help           Show this help
 
@@ -44,6 +45,7 @@ parse_args() {
         ;;
       --install-dir)
         INSTALL_DIR="${2:-}"
+        INSTALL_DIR_EXPLICIT=1
         shift 2
         ;;
       --skip-upgrade)
@@ -102,8 +104,76 @@ backup_file_if_exists() {
   fi
 }
 
+is_nodepass_deploy_dir() {
+  local dir="$1"
+  local compose_file="${dir}/docker-compose.yml"
+
+  [[ -f "${compose_file}" ]] || return 1
+  grep -qE 'nodepass-hub|HUB_IMAGE' "${compose_file}"
+}
+
+detect_install_dir() {
+  local cwd
+  cwd="$(pwd)"
+
+  if [[ "${INSTALL_DIR_EXPLICIT}" -eq 1 ]]; then
+    return 0
+  fi
+
+  if is_nodepass_deploy_dir "${cwd}"; then
+    INSTALL_DIR="${cwd}"
+    return 0
+  fi
+
+  if is_nodepass_deploy_dir "/opt/nodepass"; then
+    INSTALL_DIR="/opt/nodepass"
+    return 0
+  fi
+
+  local candidate
+  for candidate in /opt/*; do
+    [[ -d "${candidate}" ]] || continue
+    if is_nodepass_deploy_dir "${candidate}"; then
+      INSTALL_DIR="${candidate}"
+      return 0
+    fi
+  done
+}
+
+check_required_secrets() {
+  local secrets_dir="$1"
+  local missing=0
+  local file
+  local required_files=(
+    jwt_private.pem
+    jwt_public.pem
+    agent_hmac_secret.txt
+    internal_token.txt
+    external_api_key.txt
+  )
+
+  for file in "${required_files[@]}"; do
+    if [[ ! -s "${secrets_dir}/${file}" ]]; then
+      echo "Missing required secret: ${secrets_dir}/${file}" >&2
+      missing=1
+    fi
+  done
+
+  if [[ ! -f "${secrets_dir}/telegram_bot_token.txt" ]]; then
+    : > "${secrets_dir}/telegram_bot_token.txt"
+    chmod 600 "${secrets_dir}/telegram_bot_token.txt"
+    echo "Created optional secret placeholder: ${secrets_dir}/telegram_bot_token.txt"
+  fi
+
+  if [[ "${missing}" -eq 1 ]]; then
+    echo "Deployment is not fully initialized. Please run deploy/setup.sh first." >&2
+    exit 1
+  fi
+}
+
 main() {
   parse_args "$@"
+  detect_install_dir
 
   if [[ -z "${TARGET_VERSION}" ]]; then
     echo "--version cannot be empty" >&2
@@ -112,6 +182,8 @@ main() {
 
   local raw_base
   raw_base="https://raw.githubusercontent.com/${REPO_SLUG}/${REPO_REF}"
+
+  echo "Using install directory: ${INSTALL_DIR}"
 
   mkdir -p "${INSTALL_DIR}"
   if [[ ! -w "${INSTALL_DIR}" ]]; then
@@ -137,22 +209,25 @@ main() {
   download "${raw_base}/deploy/update.sh" "${INSTALL_DIR}/update.sh" 755
   download "${raw_base}/deploy/.env.example" "${INSTALL_DIR}/.env.example" 644
 
-  if [[ ! -f "${INSTALL_DIR}/.env" ]]; then
-    cp "${INSTALL_DIR}/.env.example" "${INSTALL_DIR}/.env"
-    chmod 600 "${INSTALL_DIR}/.env"
-    echo "Created ${INSTALL_DIR}/.env from .env.example"
-  fi
-
   if [[ "${SKIP_UPGRADE}" -eq 1 ]]; then
     echo "Files synced. Upgrade skipped (--skip-upgrade)."
     echo "Backup saved to: ${backup_dir}"
     exit 0
   fi
 
+  if [[ ! -f "${INSTALL_DIR}/.env" ]]; then
+    echo "Missing ${INSTALL_DIR}/.env. This looks like a fresh server." >&2
+    echo "Please run deployment setup first:" >&2
+    echo "  curl -fsSL https://raw.githubusercontent.com/${REPO_SLUG}/${REPO_REF}/deploy/setup.sh | sudo bash" >&2
+    exit 1
+  fi
+
   if ! command -v docker >/dev/null 2>&1 || ! docker compose version >/dev/null 2>&1; then
     echo "Docker + Docker Compose v2 are required." >&2
     exit 1
   fi
+
+  check_required_secrets "${INSTALL_DIR}/secrets"
 
   echo "Running upgrade to version: ${TARGET_VERSION}"
   bash "${INSTALL_DIR}/upgrade.sh" "${TARGET_VERSION}"
