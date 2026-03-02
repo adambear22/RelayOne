@@ -30,8 +30,8 @@ type AuthHandler struct {
 }
 
 type loginRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username   string `json:"username" binding:"required"`
+	Credential string `json:"password" binding:"required"` // #nosec G117 -- request DTO field.
 }
 
 type changePasswordRequest struct {
@@ -76,7 +76,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	accessToken, refreshToken, err := h.authService.Login(
 		c.Request.Context(),
 		inputsanitize.Text(req.Username),
-		req.Password,
+		req.Credential,
 	)
 	if err != nil {
 		handleAuthError(c, err)

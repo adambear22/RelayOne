@@ -1,20 +1,39 @@
 [Unit]
-Description=NodePass Agent
+Description=NodePass Agent — Traffic Forwarding Node
+Documentation=https://github.com/adambear22/nodepass-agent
 After=network-online.target
 Wants=network-online.target
+After=docker.service
 
 [Service]
 Type=simple
-User=root
+User=nodepass
+Group=nodepass
 WorkingDirectory=/opt/nodepass-agent
 ExecStart=/opt/nodepass-agent/bin/nodepass-agent --config /opt/nodepass-agent/agent.conf --workdir /opt/nodepass-agent
-Restart=on-failure
+ExecStop=/bin/kill -TERM $MAINPID
+KillMode=mixed
+TimeoutStopSec=30
+Restart=always
 RestartSec=5s
-KillMode=process
-TimeoutStopSec=10
+StartLimitIntervalSec=60s
+StartLimitBurst=5
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=nodepass-agent
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/nodepass-agent /var/log/nodepass
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+PrivateTmp=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+MemoryHigh=384M
 
 [Install]
 WantedBy=multi-user.target

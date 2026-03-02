@@ -56,10 +56,12 @@ services:
       NODEPASS_JWT_PRIVATE_KEY_FILE: /run/secrets/jwt_private_key
       NODEPASS_JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
       NODEPASS_SECURITY_AGENT_HMAC_SECRET_FILE: /run/secrets/agent_hmac_secret
+      NODEPASS_SECURITY_INTERNAL_TOKEN_FILE: /run/secrets/internal_token
     secrets:
       - jwt_private_key
       - jwt_public_key
       - agent_hmac_secret
+      - internal_token
       - telegram_bot_token
       - external_api_key
     volumes:
@@ -135,6 +137,8 @@ secrets:
     file: ./secrets/jwt_public.pem
   agent_hmac_secret:
     file: ./secrets/agent_hmac_secret.txt
+  internal_token:
+    file: ./secrets/internal_token.txt
   telegram_bot_token:
     file: ./secrets/telegram_bot_token.txt
   external_api_key:

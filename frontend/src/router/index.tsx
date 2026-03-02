@@ -11,6 +11,7 @@ import MaintenancePage from '../pages/MaintenancePage'
 import NodesPage from '../pages/NodesPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import ProfilePage from '../pages/ProfilePage'
+import RedeemPage from '../pages/RedeemPage'
 import RulesPage from '../pages/RulesPage'
 import TelegramCallbackPage from '../pages/TelegramCallbackPage'
 import TrafficPage from '../pages/TrafficPage'
@@ -80,6 +81,7 @@ export default function AppRouter() {
             <Route path="/rules/*" element={<RulesPage />} />
             <Route path="/traffic/*" element={<TrafficPage />} />
             <Route path="/vip/*" element={<VIPPage />} />
+            <Route path="/redeem" element={<RedeemPage />} />
             <Route path="/codes/*" element={<CodesPage />} />
             <Route path="/profile" element={<ProfilePage />} />
 

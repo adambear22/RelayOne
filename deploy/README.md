@@ -13,6 +13,20 @@
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main/deploy/setup.sh)"
 ```
 
+## 交互式部署向导（推荐）
+
+在仓库根目录执行：
+
+```bash
+bash scripts/deploy.sh
+```
+
+复用已有配置（跳过交互）：
+
+```bash
+bash scripts/deploy.sh --config /path/to/deploy.conf
+```
+
 ## 手动部署
 
 1. 克隆仓库并进入目录：
@@ -29,6 +43,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main
    - `jwt_private.pem`
    - `jwt_public.pem`
    - `agent_hmac_secret.txt`
+   - `internal_token.txt`
    - `telegram_bot_token.txt`
    - `external_api_key.txt`
 4. 启动服务：
@@ -59,6 +74,27 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/adambear22/RelayOne/main
   ```bash
   bash deploy/upgrade.sh v1.2.3
   ```
+
+- 使用交互式升级脚本：
+  ```bash
+  bash scripts/upgrade.sh
+  ```
+
+- 卸载（可选保留数据）：
+  ```bash
+  bash scripts/uninstall.sh
+  ```
+
+- 生产安全检查：
+  ```bash
+  sudo bash scripts/security_check.sh
+  ```
+
+- 启动监控栈（Prometheus/Grafana/Alertmanager）：
+  ```bash
+  docker compose -f monitoring/docker-compose.monitoring.yml up -d
+  ```
+  通过主域名访问（需 Caddy）：`/grafana`、`/prometheus`、`/alertmanager`。
 
 ## 回滚
 

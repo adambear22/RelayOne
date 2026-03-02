@@ -9,239 +9,286 @@ import (
 	"log/slog"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
 
-	agentconfig "nodepass-agent/config"
-	"nodepass-agent/embedfs"
-	"nodepass-agent/extractor"
-	"nodepass-agent/internal/hub_client"
-	"nodepass-agent/internal/nodepass"
-	mastermgr "nodepass-agent/manager"
-)
-
-var (
-	Version = "dev"
-	Commit  = "unknown"
+	legacyconfig "nodepass-agent/config"
+	"nodepass-agent/internal/config"
+	"nodepass-agent/internal/executor"
+	"nodepass-agent/internal/metrics"
+	"nodepass-agent/internal/npapi"
+	"nodepass-agent/internal/process"
+	"nodepass-agent/internal/reporter"
+	"nodepass-agent/internal/upgrader"
+	"nodepass-agent/internal/watchdog"
+	"nodepass-agent/internal/ws"
 )
 
 const (
-	defaultAgentConfigPath = "/opt/nodepass-agent/agent.conf"
-	defaultAgentWorkDir    = "/opt/nodepass-agent"
+	defaultConfigPath = "/opt/nodepass-agent/agent.conf"
+	defaultWorkDir    = "/opt/nodepass-agent"
+)
+
+var (
+	Version   = "dev"
+	BuildTime = "unknown"
 )
 
 func main() {
-	if len(os.Args) > 1 {
-		switch os.Args[1] {
-		case "healthcheck":
-			os.Exit(runHealthcheck())
+	args := os.Args[1:]
+	healthcheck := false
+	if len(args) > 0 && args[0] == "healthcheck" {
+		healthcheck = true
+		args = args[1:]
+	}
+
+	configPath, workDir, err := parseArgs(args)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	if healthcheck {
+		if err := runHealthcheck(configPath, workDir); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
+		os.Exit(0)
 	}
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+	defer cancel()
 
-	if err := run(ctx, logger, os.Args[1:]); err != nil {
-		logger.Error("agent exited with error", slog.Any("err", err))
+	if err := run(ctx, logger, configPath, workDir); err != nil {
+		logger.Error("agent exited", slog.Any("err", err))
 		os.Exit(1)
 	}
 }
 
-func run(ctx context.Context, logger *slog.Logger, args []string) error {
+func parseArgs(args []string) (configPath string, workDir string, err error) {
 	fs := flag.NewFlagSet("nodepass-agent", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 
-	configPath := fs.String("config", defaultAgentConfigPath, "agent config file path")
-	workDir := fs.String("workdir", defaultAgentWorkDir, "agent working directory")
-	if err := fs.Parse(args); err != nil {
-		return err
+	cfgPath := fs.String("config", defaultConfigPath, "agent config path")
+	wd := fs.String("workdir", firstNonEmpty(strings.TrimSpace(os.Getenv("WORK_DIR")), defaultWorkDir), "agent work directory")
+
+	if parseErr := fs.Parse(args); parseErr != nil {
+		return "", "", parseErr
 	}
 
-	if len(fs.Args()) > 0 {
-		switch fs.Args()[0] {
-		case "extract-only", "--extract-only":
-			nodepassPath, err := extractNodePassBinary(logger, *workDir)
-			if err != nil {
-				return err
-			}
-			fmt.Println(nodepassPath)
-			return nil
-		}
-	}
+	return strings.TrimSpace(*cfgPath), strings.TrimSpace(*wd), nil
+}
 
-	logger.Info("agent starting", slog.String("version", Version), slog.String("commit", Commit))
-
-	cfg, err := agentconfig.Load(*configPath)
+func run(ctx context.Context, logger *slog.Logger, configPath, workDir string) error {
+	cfg, err := resolveRuntimeConfig(configPath, workDir)
 	if err != nil {
 		return fmt.Errorf("load config: %w", err)
 	}
-	cfgChanged := mergeConfigFromEnv(cfg)
-	if cfgChanged {
-		if err := cfg.Save(); err != nil {
-			return fmt.Errorf("persist base config from env: %w", err)
-		}
+
+	logger.Info("agent boot", slog.String("version", Version), slog.String("build_time", BuildTime))
+
+	if err := os.MkdirAll(cfg.WorkDir, 0o755); err != nil {
+		return fmt.Errorf("prepare work dir: %w", err)
 	}
 
-	nodepassPath, err := extractNodePassBinary(logger, *workDir)
+	extractor := process.NewExtractor(cfg.WorkDir)
+	if err := extractor.Extract(); err != nil {
+		return fmt.Errorf("extract nodepass binary: %w", err)
+	}
+
+	agentConf, err := config.Load(cfg.WorkDir)
 	if err != nil {
-		return fmt.Errorf("extract nodepass: %w", err)
+		return fmt.Errorf("load agent.conf: %w", err)
 	}
 
-	masterManager := mastermgr.New(nodepassPath, cfg.NodePass.MasterPort)
-	masterManager.StartTimeout = time.Duration(cfg.NodePass.StartTimeout) * time.Second
-	masterManager.SetCredentials(mastermgr.Credentials{
-		MasterAddr: cfg.NodePass.MasterAddr,
-		APIKey:     cfg.NodePass.APIKey,
-	})
-
-	runtimeManager := nodepass.NewManager(nodepassPath, logger)
-	var client *hub_client.Client
-	masterManager.OnRenew = func(newCreds mastermgr.Credentials) {
-		if err := cfg.SetCredentials(newCreds.MasterAddr, newCreds.APIKey); err != nil {
-			logger.Error("save renewed credentials failed", slog.Any("err", err))
-		}
-		if client != nil {
-			client.UpdateNodePassCredentials(newCreds.MasterAddr, newCreds.APIKey)
-		}
-		logger.Info("credentials renewed via watchdog")
+	manager := process.NewProcessManager(extractor.BinPath, cfg.WorkDir)
+	if err := manager.Start(); err != nil {
+		return fmt.Errorf("start nodepass process: %w", err)
 	}
 
-	if cfg.HasValidCredentials() {
-		logger.Info("using cached credentials from agent.conf")
-		if err := masterManager.StartManaged(ctx); err != nil {
-			return fmt.Errorf("start nodepass managed: %w", err)
-		}
-	} else {
-		logger.Info("starting nodepass, waiting for credentials")
-		creds, err := masterManager.Start(ctx)
-		if err != nil {
-			return fmt.Errorf("start nodepass: %w", err)
-		}
-		if err := cfg.SetCredentials(creds.MasterAddr, creds.APIKey); err != nil {
-			return fmt.Errorf("save credentials: %w", err)
-		}
-		logger.Info(
-			"credentials saved to agent.conf",
-			slog.String("master_addr", creds.MasterAddr),
-			slog.String("api_key_prefix", maskSecretPrefix(creds.APIKey)),
-		)
-	}
-
-	hubCfg, err := loadHubConfig(cfg)
+	credentials, err := ensureCredentials(cfg.WorkDir, agentConf, manager)
 	if err != nil {
 		return err
 	}
-	client = hub_client.NewClient(hubCfg, runtimeManager, logger)
-	runtimeManager.StartTrafficReporter(client)
 
-	if err := client.Start(ctx); err != nil {
-		return fmt.Errorf("connect hub: %w", err)
+	npClient := npapi.New(credentials.MasterAddr, credentials.APIKey)
+
+	wd := watchdog.New(manager, agentConf, cfg.WorkDir, func(newCreds process.Credentials) {
+		npClient.UpdateCredentials(newCreds.MasterAddr, newCreds.APIKey)
+	})
+	go wd.Start(ctx)
+
+	wsClient := ws.NewClient(cfg.HubURL, cfg.AgentID, cfg.InternalToken)
+	wsClient.SetVersion(Version)
+	go wsClient.Start(ctx)
+	if err := wsClient.WaitForConnection(30 * time.Second); err != nil {
+		logger.Warn("wait websocket connection failed", slog.Any("err", err))
 	}
-	if err := client.SendDeployProgress("connected", 100, "agent connected"); err != nil {
-		logger.Warn("send connected progress failed", slog.Any("err", err))
+
+	cache := executor.NewInstanceCache(cfg.WorkDir)
+	exec := executor.New(npClient, cache)
+	if err := exec.RecoverFromCache(); err != nil {
+		logger.Warn("cache recovery failed", slog.Any("err", err))
 	}
+	relayExec := executor.NewRelayExecutor(npClient, cache)
+	agentUpgrader := upgrader.New(cfg.WorkDir, currentVersion)
+
+	router := ws.NewRouter(wsClient, 4)
+	router.Register("rule_create", exec.HandleRuleCreate)
+	router.Register("rule_start", exec.HandleRuleStart)
+	router.Register("rule_stop", exec.HandleRuleStop)
+	router.Register("rule_restart", exec.HandleRuleRestart)
+	router.Register("rule_delete", exec.HandleRuleDelete)
+	router.Register("relay_start", relayExec.HandleRelayStart)
+	router.Register("config_reload", exec.HandleConfigReload)
+	router.Register("upgrade", func(ctx context.Context, msg ws.HubMessage) error {
+		if err := agentUpgrader.HandleUpgrade(ctx, msg); err != nil {
+			return err
+		}
+
+		go func() {
+			time.Sleep(300 * time.Millisecond)
+			if err := agentUpgrader.ExecPending(); err != nil && !errors.Is(err, upgrader.ErrNoPendingUpgrade) {
+				logger.Error("agent exec upgrade failed", slog.Any("err", err))
+			}
+		}()
+		return nil
+	})
+	go router.Start(ctx)
+
+	collector := metrics.NewCollector(
+		time.Duration(cfg.MetricsInterval)*time.Second,
+		wsClient,
+		npClient,
+		cfg.AgentID,
+	)
+	go collector.Start(ctx)
+
+	trafficReporter := reporter.NewTrafficReporter(
+		time.Duration(cfg.TrafficInterval)*time.Second,
+		wsClient,
+		npClient,
+		cfg.WorkDir,
+		cfg.AgentID,
+	)
+	go trafficReporter.Start(ctx)
 
 	<-ctx.Done()
-	client.Close()
-	_ = masterManager.Stop()
-
-	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer shutdownCancel()
-	runtimeManager.Shutdown(shutdownCtx)
+	logger.Info("agent shutting down")
+	wsClient.Close()
+	_ = wd.Stop()
+	_ = manager.Stop()
 	return nil
 }
 
-func extractNodePassBinary(logger *slog.Logger, workDir string) (string, error) {
-	if strings.TrimSpace(workDir) == "" {
-		workDir = strings.TrimSpace(os.Getenv("NODEPASS_WORK_DIR"))
-	}
-	ex := extractor.New(workDir)
-	if err := ex.Extract(embedfs.NodepassFiles); err != nil {
-		return "", err
-	}
-
-	if logger != nil {
-		logger.Info("nodepass binary ready", slog.String("path", ex.BinPath))
+func resolveRuntimeConfig(configPath, workDir string) (*config.Config, error) {
+	envCfg, envErr := config.LoadFromEnv()
+	if envErr == nil {
+		if strings.TrimSpace(workDir) != "" {
+			envCfg.WorkDir = strings.TrimSpace(workDir)
+		}
+		return envCfg, nil
 	}
 
-	return ex.BinPath, nil
+	legacyCfg, legacyErr := legacyconfig.Load(configPath)
+	if legacyErr != nil {
+		return nil, fmt.Errorf("env config error: %v; legacy config error: %w", envErr, legacyErr)
+	}
+
+	resolved := &config.Config{
+		HubURL:          firstNonEmpty(os.Getenv("HUB_URL"), os.Getenv("HUB_WS_URL"), legacyCfg.Agent.PanelURL),
+		AgentID:         firstNonEmpty(os.Getenv("AGENT_ID"), legacyCfg.Agent.AgentID),
+		InternalToken:   firstNonEmpty(os.Getenv("INTERNAL_TOKEN"), os.Getenv("AGENT_TOKEN"), legacyCfg.Agent.DeployToken),
+		WorkDir:         firstNonEmpty(os.Getenv("WORK_DIR"), workDir, defaultWorkDir),
+		LogLevel:        firstNonEmpty(os.Getenv("LOG_LEVEL"), "info"),
+		MetricsInterval: envInt("METRICS_INTERVAL", 30),
+		TrafficInterval: envInt("TRAFFIC_INTERVAL", 60),
+	}
+
+	if strings.TrimSpace(resolved.HubURL) == "" {
+		return nil, errors.New("HUB_URL/HUB_WS_URL is required")
+	}
+	if strings.TrimSpace(resolved.AgentID) == "" {
+		return nil, errors.New("AGENT_ID is required")
+	}
+	if strings.TrimSpace(resolved.InternalToken) == "" {
+		return nil, errors.New("INTERNAL_TOKEN or AGENT_TOKEN is required")
+	}
+	if resolved.MetricsInterval <= 0 {
+		resolved.MetricsInterval = 30
+	}
+	if resolved.TrafficInterval <= 0 {
+		resolved.TrafficInterval = 60
+	}
+	return resolved, nil
 }
 
-func loadHubConfig(cfg *agentconfig.Config) (hub_client.Config, error) {
-	hubWSURL := firstNonEmpty(os.Getenv("HUB_WS_URL"), cfg.Agent.PanelURL)
-	agentID := firstNonEmpty(os.Getenv("AGENT_ID"), cfg.Agent.AgentID)
-	agentToken := firstNonEmpty(os.Getenv("AGENT_TOKEN"), cfg.Agent.DeployToken)
-
-	if strings.TrimSpace(hubWSURL) == "" {
-		return hub_client.Config{}, errors.New("hub ws url is required (HUB_WS_URL or agent.panel_url)")
-	}
-	if strings.TrimSpace(agentID) == "" {
-		return hub_client.Config{}, errors.New("agent id is required (AGENT_ID or agent.agent_id)")
-	}
-	if strings.TrimSpace(agentToken) == "" {
-		return hub_client.Config{}, errors.New("agent token is required (AGENT_TOKEN or agent.deploy_token)")
+func ensureCredentials(workDir string, conf *config.AgentConf, manager *process.ProcessManager) (process.Credentials, error) {
+	if conf == nil {
+		conf = &config.AgentConf{}
 	}
 
-	version := strings.TrimSpace(Version)
-	if version == "" {
-		version = "dev"
+	valid, err := config.Validate(workDir, conf.MasterAddr, conf.APIKey)
+	if err == nil && valid {
+		return process.Credentials{MasterAddr: conf.MasterAddr, APIKey: conf.APIKey}, nil
 	}
 
-	return hub_client.Config{
-		HubWSURL:   strings.TrimSpace(hubWSURL),
-		AgentID:    strings.TrimSpace(agentID),
-		AgentToken: strings.TrimSpace(agentToken),
-		Version:    version,
-	}, nil
+	if manager == nil {
+		return process.Credentials{}, errors.New("process manager is required when credentials are missing")
+	}
+
+	creds, err := manager.WaitForCredentials(30 * time.Second)
+	if err != nil {
+		if valid {
+			return process.Credentials{MasterAddr: conf.MasterAddr, APIKey: conf.APIKey}, nil
+		}
+		return process.Credentials{}, fmt.Errorf("wait credentials: %w", err)
+	}
+
+	conf.MasterAddr = creds.MasterAddr
+	conf.APIKey = creds.APIKey
+	if saveErr := config.Save(workDir, conf); saveErr != nil {
+		return process.Credentials{}, fmt.Errorf("save agent.conf: %w", saveErr)
+	}
+	return creds, nil
 }
 
-func mergeConfigFromEnv(cfg *agentconfig.Config) bool {
-	changed := false
+func runHealthcheck(configPath, workDir string) error {
+	cfg, err := resolveRuntimeConfig(configPath, workDir)
+	if err != nil {
+		return err
+	}
+	if cfg.HubURL == "" || cfg.AgentID == "" {
+		return errors.New("healthcheck: missing required config")
+	}
+	return nil
+}
 
-	if v := strings.TrimSpace(os.Getenv("HUB_WS_URL")); v != "" && strings.TrimSpace(cfg.Agent.PanelURL) == "" {
-		cfg.Agent.PanelURL = v
-		changed = true
-	}
-	if v := strings.TrimSpace(os.Getenv("AGENT_ID")); v != "" && strings.TrimSpace(cfg.Agent.AgentID) == "" {
-		cfg.Agent.AgentID = v
-		changed = true
-	}
-	if v := strings.TrimSpace(os.Getenv("AGENT_TOKEN")); v != "" && strings.TrimSpace(cfg.Agent.DeployToken) == "" {
-		cfg.Agent.DeployToken = v
-		changed = true
-	}
-
-	return changed
+func currentVersion() string {
+	return Version
 }
 
 func firstNonEmpty(values ...string) string {
 	for _, value := range values {
-		if strings.TrimSpace(value) != "" {
-			return value
+		trimmed := strings.TrimSpace(value)
+		if trimmed != "" {
+			return trimmed
 		}
 	}
 	return ""
 }
 
-func maskSecretPrefix(secret string) string {
-	trimmed := strings.TrimSpace(secret)
-	if trimmed == "" {
-		return ""
+func envInt(key string, fallback int) int {
+	value := strings.TrimSpace(os.Getenv(key))
+	if value == "" {
+		return fallback
 	}
-	if len(trimmed) <= 8 {
-		return trimmed
+	parsed, err := strconv.Atoi(value)
+	if err != nil {
+		return fallback
 	}
-	return trimmed[:8] + "..."
-}
-
-func runHealthcheck() int {
-	required := []string{"HUB_WS_URL", "AGENT_ID", "AGENT_TOKEN"}
-	for _, envKey := range required {
-		if strings.TrimSpace(os.Getenv(envKey)) == "" {
-			return 1
-		}
-	}
-	return 0
+	return parsed
 }

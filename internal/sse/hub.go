@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"go.uber.org/zap"
+
+	"nodepass-hub/internal/metrics"
 )
 
 const (
@@ -65,6 +67,7 @@ func (h *SSEHub) Register(client *SSEClient) {
 	}
 
 	h.clients.Store(client.UserID, client)
+	metrics.SetSSEClients(h.ConnectedCount())
 }
 
 func (h *SSEHub) Unregister(userID string) {
@@ -80,6 +83,7 @@ func (h *SSEHub) Unregister(userID string) {
 	if client, ok := value.(*SSEClient); ok {
 		client.Close()
 	}
+	metrics.SetSSEClients(h.ConnectedCount())
 }
 
 func (h *SSEHub) Broadcast(event SSEEvent) {
@@ -175,6 +179,19 @@ func (h *SSEHub) Close() {
 	default:
 		close(h.stopCh)
 	}
+}
+
+func (h *SSEHub) ConnectedCount() int {
+	if h == nil {
+		return 0
+	}
+
+	count := 0
+	h.clients.Range(func(_, _ interface{}) bool {
+		count++
+		return true
+	})
+	return count
 }
 
 func (h *SSEHub) dispatch(client *SSEClient, event SSEEvent) {

@@ -25,6 +25,7 @@ type AgentClient struct {
 	Done chan struct{}
 
 	hub            *Hub
+	connectedAt    time.Time
 	lastPongUnix   atomic.Int64
 	unregisterOnce sync.Once
 	closeOnce      sync.Once
@@ -32,11 +33,12 @@ type AgentClient struct {
 
 func NewAgentClient(id string, conn *websocket.Conn, h *Hub) *AgentClient {
 	client := &AgentClient{
-		ID:   id,
-		Conn: conn,
-		Send: make(chan []byte, 256),
-		Done: make(chan struct{}),
-		hub:  h,
+		ID:          id,
+		Conn:        conn,
+		Send:        make(chan []byte, 256),
+		Done:        make(chan struct{}),
+		hub:         h,
+		connectedAt: time.Now().UTC(),
 	}
 	client.markPong(time.Now().UTC())
 	return client
@@ -138,6 +140,10 @@ func (c *AgentClient) LastPong() time.Time {
 
 func (c *AgentClient) markPong(ts time.Time) {
 	c.lastPongUnix.Store(ts.UnixNano())
+}
+
+func (c *AgentClient) ConnectedAt() time.Time {
+	return c.connectedAt
 }
 
 func (c *AgentClient) collectBatch(first []byte) [][]byte {

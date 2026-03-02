@@ -46,31 +46,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -105,31 +105,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -152,31 +152,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -220,31 +220,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -286,31 +286,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -352,31 +352,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -420,31 +420,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -481,31 +481,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -542,31 +542,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -603,31 +603,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -650,31 +650,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -711,31 +711,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -758,31 +758,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -819,31 +819,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -880,31 +880,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -941,31 +941,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1002,31 +1002,92 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/codes/redeem/history": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Auto-generated endpoint documentation for ListRedeemHistory.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "code"
+                ],
+                "summary": "ListRedeemHistory",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1063,31 +1124,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1124,31 +1185,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1185,31 +1246,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1244,31 +1305,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1312,31 +1373,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1378,31 +1439,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1444,31 +1505,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1512,31 +1573,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1578,31 +1639,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1646,31 +1707,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1707,31 +1768,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1766,31 +1827,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1834,31 +1895,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1900,31 +1961,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1966,31 +2027,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2034,31 +2095,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2100,31 +2161,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2175,31 +2236,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2248,31 +2309,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2309,31 +2370,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2368,31 +2429,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2436,31 +2497,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2502,31 +2563,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2568,31 +2629,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2636,31 +2697,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2692,31 +2753,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2760,31 +2821,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2821,31 +2882,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2880,31 +2941,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2941,31 +3002,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3009,31 +3070,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3075,31 +3136,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3141,31 +3202,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3209,31 +3270,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3277,31 +3338,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3345,31 +3406,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3413,31 +3474,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3481,31 +3542,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3528,31 +3589,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3587,31 +3648,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3648,31 +3709,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3709,31 +3770,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3770,31 +3831,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3831,31 +3892,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3899,31 +3960,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -3967,31 +4028,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4028,31 +4089,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4089,31 +4150,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4150,31 +4211,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4209,31 +4270,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4270,31 +4331,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4338,31 +4399,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4404,31 +4465,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4472,31 +4533,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4540,31 +4601,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4606,31 +4667,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4667,31 +4728,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4726,31 +4787,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4787,31 +4848,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4855,31 +4916,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4923,31 +4984,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4989,31 +5050,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -5055,31 +5116,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -5102,31 +5163,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/nodepass-hub_internal_api_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -5134,7 +5195,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "nodepass-hub_internal_api_response.Pagination": {
+        "response.Pagination": {
             "type": "object",
             "properties": {
                 "page": {
@@ -5148,7 +5209,7 @@ const docTemplate = `{
                 }
             }
         },
-        "nodepass-hub_internal_api_response.Response": {
+        "response.Response": {
             "type": "object",
             "properties": {
                 "code": {
@@ -5159,7 +5220,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "pagination": {
-                    "$ref": "#/definitions/nodepass-hub_internal_api_response.Pagination"
+                    "$ref": "#/definitions/response.Pagination"
                 }
             }
         }

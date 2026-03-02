@@ -21,7 +21,7 @@ import (
 
 const (
 	defaultSystemTrafficQuota int64 = 10737418240
-	defaultSystemMaxRules           = 5
+	defaultSystemMaxRules     int   = 5
 )
 
 var (

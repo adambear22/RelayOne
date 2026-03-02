@@ -125,6 +125,7 @@ func TestCompile_DefaultValues(t *testing.T) {
 
 func TestBuildURL_OnlyNonDefaultParams(t *testing.T) {
 	url := BuildURL("tcp", "example.com", 3000, "alice", "secret", NodePassParams{})
+	// #nosec G101 -- test fixture only.
 	want := "tcp://alice:secret@example.com:3000"
 	if url != want {
 		t.Fatalf("unexpected url: want %q, got %q", want, url)

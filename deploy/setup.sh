@@ -679,6 +679,13 @@ generate_secrets() {
     log_ok "外部 API 密钥已存在，跳过生成"
   fi
 
+  if [[ ! -f "${SECRETS_DIR}/internal_token.txt" ]]; then
+    write_secret_atomic "${SECRETS_DIR}/internal_token.txt" 600 "$(openssl rand -hex 32)"
+    log_ok "内部接口令牌已生成"
+  else
+    log_ok "内部接口令牌已存在，跳过生成"
+  fi
+
   if [[ -n "${TG_TOKEN:-}" ]]; then
     write_secret_atomic "${SECRETS_DIR}/telegram_bot_token.txt" 600 "${TG_TOKEN}"
     log_ok "Telegram Bot Token 已保存"
@@ -907,6 +914,7 @@ print_summary() {
   echo -e "${YELLOW}${BOLD}  ⚠️  请保存以下密钥（仅显示一次）：${NC}"
   echo -e "  Agent HMAC 密钥:   ${BOLD}${agent_secret}${NC}"
   echo -e "  外部 API 密钥:     ${BOLD}${external_key}${NC}"
+  echo -e "  内部接口令牌:      ${INSTALL_DIR}/secrets/internal_token.txt"
   echo -e "  JWT 私钥:          ${INSTALL_DIR}/secrets/jwt_private.pem"
   echo ""
   echo -e "${BOLD}  常用命令：${NC}"

@@ -14,6 +14,7 @@ import (
 	"go.uber.org/zap"
 
 	"nodepass-hub/internal/event"
+	"nodepass-hub/internal/metrics"
 	"nodepass-hub/internal/model"
 	"nodepass-hub/internal/repository"
 	"nodepass-hub/internal/service"
@@ -131,6 +132,7 @@ func (h *Hub) Register(client *AgentClient) {
 
 	h.clients.Store(client.ID, client)
 	client.markPong(time.Now().UTC())
+	metrics.SetAgentConnections(h.ConnectedCount())
 
 	h.setNodeOnline(context.Background(), client.ID)
 	h.broadcastNodeStatus(client.ID, "online")
@@ -146,6 +148,11 @@ func (h *Hub) Unregister(client *AgentClient) {
 			return
 		}
 		h.clients.Delete(client.ID)
+		connectedAt := client.ConnectedAt()
+		if !connectedAt.IsZero() {
+			metrics.ObserveAgentConnectionDuration(client.ID, time.Since(connectedAt))
+		}
+		metrics.SetAgentConnections(h.ConnectedCount())
 	}
 
 	go func(agentID string) {
@@ -174,6 +181,15 @@ func (h *Hub) Unregister(client *AgentClient) {
 		})
 		h.broadcastNodeStatus(agentID, "offline")
 	}(client.ID)
+}
+
+func (h *Hub) ConnectedCount() int {
+	count := 0
+	h.clients.Range(func(_, _ interface{}) bool {
+		count++
+		return true
+	})
+	return count
 }
 
 func (h *Hub) HandleMessage(client *AgentClient, raw []byte) {
@@ -505,12 +521,14 @@ func (h *Hub) handleAck(msg Message) {
 
 func (h *Hub) handleTrafficReport(client *AgentClient, msg Message) {
 	if h.trafficSvc == nil {
+		h.sendACKToAgent(client, msg.ID, false, "traffic service unavailable")
 		return
 	}
 
 	var payload TrafficReportPayload
 	if err := json.Unmarshal(msg.Payload, &payload); err != nil {
 		h.logger.Warn("invalid traffic report payload", zap.String("agent_id", client.ID), zap.Error(err))
+		h.sendACKToAgent(client, msg.ID, false, "invalid traffic payload")
 		return
 	}
 
@@ -538,7 +556,11 @@ func (h *Hub) handleTrafficReport(client *AgentClient, msg Message) {
 
 	if err := h.trafficSvc.HandleReport(ctx, agentID, records); err != nil {
 		h.logger.Warn("handle traffic report failed", zap.String("agent_id", agentID), zap.Error(err))
+		h.sendACKToAgent(client, msg.ID, false, "traffic report failed")
+		return
 	}
+
+	h.sendACKToAgent(client, msg.ID, true, "")
 }
 
 func (h *Hub) handleDeployProgress(client *AgentClient, msg Message) {
@@ -556,6 +578,33 @@ func (h *Hub) handleDeployProgress(client *AgentClient, msg Message) {
 	h.insertDeployLog(context.Background(), agentID, payload.Step, payload.Progress, payload.Message)
 	h.sendAdminEvent("deploy.progress", payload)
 	h.publishEvent("deploy.progress", payload)
+}
+
+func (h *Hub) sendACKToAgent(client *AgentClient, requestID string, success bool, errMsg string) {
+	if client == nil {
+		return
+	}
+	ackID := strings.TrimSpace(requestID)
+	if ackID == "" {
+		return
+	}
+
+	payload := map[string]interface{}{
+		"success": success,
+	}
+	if errMsg != "" {
+		payload["error"] = errMsg
+	}
+	raw, err := json.Marshal(payload)
+	if err != nil {
+		return
+	}
+
+	_ = h.sendToClient(client, Message{
+		Type:    Ack,
+		ID:      ackID,
+		Payload: raw,
+	})
 }
 
 func (h *Hub) handleStatusReport(client *AgentClient, msg Message) {

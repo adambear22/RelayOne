@@ -14,6 +14,7 @@ import (
 	"go.uber.org/zap"
 
 	"nodepass-hub/internal/event"
+	"nodepass-hub/internal/metrics"
 	"nodepass-hub/internal/model"
 	"nodepass-hub/internal/repository"
 )
@@ -117,6 +118,7 @@ type TrafficService interface {
 	QueryRuleStats(ctx context.Context, ruleID string, from, to time.Time) ([]*HourlyPoint, error)
 	AdminOverview(ctx context.Context) (*TrafficOverview, error)
 	ResetUserQuota(ctx context.Context, userID string) error
+	ResetAllMonthlyQuotas(ctx context.Context) (int64, error)
 	BatchSyncQuota(ctx context.Context) error
 }
 
@@ -191,6 +193,15 @@ func NewTrafficService(
 }
 
 func (s *trafficService) HandleReport(ctx context.Context, agentID string, records []TrafficRecord) error {
+	startedAt := time.Now()
+	var totalIn int64
+	var totalOut int64
+	var totalBilled int64
+	defer func() {
+		metrics.ObserveTrafficReportDuration(time.Since(startedAt))
+		metrics.AddTrafficBytes(totalIn, totalOut, totalBilled)
+	}()
+
 	if len(records) == 0 {
 		return nil
 	}
@@ -232,6 +243,9 @@ func (s *trafficService) HandleReport(ctx context.Context, agentID string, recor
 		if billedBytes < 0 {
 			billedBytes = 0
 		}
+		totalIn += record.BytesIn
+		totalOut += record.BytesOut
+		totalBilled += billedBytes
 
 		used, quota, err := s.incrementUserTraffic(ctx, info.OwnerID, billedBytes)
 		if err != nil {
@@ -618,6 +632,37 @@ func (s *trafficService) ResetUserQuota(ctx context.Context, userID string) erro
 	}
 
 	return nil
+}
+
+func (s *trafficService) ResetAllMonthlyQuotas(ctx context.Context) (int64, error) {
+	if s.pool == nil {
+		return 0, errors.New("database pool is nil")
+	}
+
+	tag, err := s.pool.Exec(
+		ctx,
+		`UPDATE users
+		    SET traffic_used = 0,
+		        updated_at = NOW()
+		  WHERE traffic_used <> 0`,
+	)
+	if err != nil {
+		return 0, err
+	}
+
+	affected := tag.RowsAffected()
+	if s.auditRepo != nil {
+		_ = s.auditRepo.Create(ctx, &model.AuditLog{
+			Action:       "user.quota.reset_monthly",
+			ResourceType: strPtr("system"),
+			NewValue: map[string]interface{}{
+				"users_reset": affected,
+			},
+			CreatedAt: time.Now().UTC(),
+		})
+	}
+
+	return affected, nil
 }
 
 func (s *trafficService) BatchSyncQuota(ctx context.Context) error {

@@ -14,6 +14,9 @@ MASTER_PORT="${MASTER_PORT:-9090}"
 CONNECT_ADDR="${CONNECT_ADDR:-}"
 PANEL_RELEASE_URL="${PANEL_RELEASE_URL:-}"
 AGENT_VERSION="${AGENT_VERSION:-latest}"
+AGENT_USER="${AGENT_USER:-nodepass}"
+AGENT_GROUP="${AGENT_GROUP:-nodepass}"
+LOG_DIR="${LOG_DIR:-/var/log/nodepass}"
 AUTO_YES=0
 
 log() {
@@ -195,6 +198,10 @@ download_agent() {
   mkdir -p "${INSTALL_DIR}/bin"
   install -m 755 "${tmp_file}" "${INSTALL_DIR}/bin/nodepass-agent"
   rm -f "${tmp_file}"
+
+  if [[ "$(uname -s)" == "Linux" ]] && id -u "${AGENT_USER}" >/dev/null 2>&1; then
+    chown "${AGENT_USER}:${AGENT_GROUP}" "${INSTALL_DIR}/bin/nodepass-agent"
+  fi
 }
 
 generate_agent_id() {
@@ -236,8 +243,13 @@ heartbeat_interval = 30
 command_timeout = 30
 EOF
 
-  install -m 600 "${tmp_file}" "${config_path}"
+  install -m 640 "${tmp_file}" "${config_path}"
   rm -f "${tmp_file}"
+
+  if [[ "$(uname -s)" == "Linux" ]] && id -u "${AGENT_USER}" >/dev/null 2>&1; then
+    chown "${AGENT_USER}:${AGENT_GROUP}" "${config_path}"
+  fi
+
   log "wrote base config: ${config_path}"
 }
 
@@ -250,22 +262,41 @@ create_systemd_service() {
 
   cat > "${tmp_file}" <<EOF
 [Unit]
-Description=NodePass Agent
+Description=NodePass Agent — Traffic Forwarding Node
+Documentation=https://github.com/adambear22/nodepass-agent
 After=network-online.target
 Wants=network-online.target
+After=docker.service
 
 [Service]
 Type=simple
-User=root
+User=${AGENT_USER}
+Group=${AGENT_GROUP}
 WorkingDirectory=${INSTALL_DIR}
 ExecStart=${INSTALL_DIR}/bin/nodepass-agent --config ${INSTALL_DIR}/agent.conf --workdir ${INSTALL_DIR}
-Restart=on-failure
+ExecStop=/bin/kill -TERM \$MAINPID
+KillMode=mixed
+TimeoutStopSec=30
+Restart=always
 RestartSec=5s
-KillMode=process
-TimeoutStopSec=10
+StartLimitIntervalSec=60s
+StartLimitBurst=5
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=nodepass-agent
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=${INSTALL_DIR} ${LOG_DIR}
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+PrivateTmp=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+MemoryHigh=384M
 
 [Install]
 WantedBy=multi-user.target
@@ -274,6 +305,64 @@ EOF
   install -m 644 "${tmp_file}" "${service_file}"
   rm -f "${tmp_file}"
   log "wrote systemd service: ${service_file}"
+}
+
+setup_logrotate() {
+  local logrotate_file tmp_file
+
+  logrotate_file="/etc/logrotate.d/nodepass-agent"
+  tmp_file="$(mktemp)"
+
+  cat > "${tmp_file}" <<EOF
+${LOG_DIR}/*.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    postrotate
+        systemctl kill -s HUP nodepass-agent.service >/dev/null 2>&1 || true
+    endscript
+}
+EOF
+
+  install -m 644 "${tmp_file}" "${logrotate_file}"
+  rm -f "${tmp_file}"
+  log "wrote logrotate config: ${logrotate_file}"
+}
+
+ensure_agent_user_and_dirs() {
+  local nologin_shell
+
+  nologin_shell="$(command -v nologin || true)"
+  if [[ -z "${nologin_shell}" ]]; then
+    nologin_shell="/usr/sbin/nologin"
+  fi
+  if [[ ! -x "${nologin_shell}" ]]; then
+    nologin_shell="/sbin/nologin"
+  fi
+  if [[ ! -x "${nologin_shell}" ]]; then
+    nologin_shell="/bin/false"
+  fi
+
+  if ! getent group "${AGENT_GROUP}" >/dev/null 2>&1; then
+    groupadd --system "${AGENT_GROUP}"
+  fi
+
+  if ! id -u "${AGENT_USER}" >/dev/null 2>&1; then
+    useradd \
+      --system \
+      --gid "${AGENT_GROUP}" \
+      --home-dir "${INSTALL_DIR}" \
+      --shell "${nologin_shell}" \
+      "${AGENT_USER}"
+  fi
+
+  mkdir -p "${INSTALL_DIR}/bin" "${INSTALL_DIR}/logs" "${LOG_DIR}"
+  chown -R "${AGENT_USER}:${AGENT_GROUP}" "${INSTALL_DIR}" "${LOG_DIR}"
+  chmod 750 "${INSTALL_DIR}" "${INSTALL_DIR}/logs" "${LOG_DIR}"
+  log "prepared user and directories: ${AGENT_USER}:${AGENT_GROUP}"
 }
 
 wait_for_credentials() {
@@ -316,11 +405,16 @@ main() {
   release_url="$(derive_release_url)"
 
   log "platform: ${platform}"
+  if [[ "${platform}" == linux_* ]]; then
+    ensure_agent_user_and_dirs
+  fi
+
   download_agent "${platform}" "${release_url}"
   write_base_config
 
   if [[ "${platform}" == linux_* ]]; then
     create_systemd_service
+    setup_logrotate
     systemctl daemon-reload
     systemctl enable --now nodepass-agent
     wait_for_credentials "${INSTALL_DIR}/agent.conf" 60

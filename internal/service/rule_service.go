@@ -14,6 +14,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
 
+	"nodepass-hub/internal/metrics"
 	"nodepass-hub/internal/model"
 	"nodepass-hub/internal/repository"
 	"nodepass-hub/internal/sse"
@@ -279,8 +280,8 @@ func (s *RuleService) List(ctx context.Context, page, pageSize int, filter RuleL
 
 	repoFilter := repository.RuleListFilter{
 		Pagination: repository.Pagination{
-			Limit:  int32(pageSize),
-			Offset: int32((page - 1) * pageSize),
+			Limit:  clampIntToInt32(pageSize),
+			Offset: clampIntToInt32((page - 1) * pageSize),
 		},
 	}
 
@@ -702,7 +703,15 @@ func (s *RuleService) GetInstanceInfo(ctx context.Context, ruleID string) (*Inst
 	return info, nil
 }
 
-func (s *RuleService) dispatchRuleAction(ctx context.Context, ruleID, operatorID, action, forcedStatus string) error {
+func (s *RuleService) dispatchRuleAction(ctx context.Context, ruleID, operatorID, action, forcedStatus string) (err error) {
+	syncStartedAt := time.Now()
+	defer func() {
+		metrics.ObserveRuleSyncDuration(time.Since(syncStartedAt))
+		if err != nil {
+			metrics.IncRuleSyncError()
+		}
+	}()
+
 	rule, err := s.GetByID(ctx, ruleID)
 	if err != nil {
 		return err

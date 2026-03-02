@@ -37,6 +37,12 @@ export interface UpdateUserPayload {
   permissions?: string[]
 }
 
+export interface BindTelegramPayload {
+  telegram_id?: number
+  username?: string
+  bind_code?: string
+}
+
 export async function listUsers(params?: ListUsersParams): Promise<PaginatedResult<User[]>> {
   return requestPaginated<User[]>({
     method: 'GET',
@@ -66,5 +72,20 @@ export async function setUserStatus(userId: string, status: UserStatus) {
     method: 'PATCH',
     url: `/users/${userId}/status`,
     data: { status },
+  })
+}
+
+export async function bindUserTelegram(userId: string, payload: BindTelegramPayload) {
+  return request<{ bound: boolean }>({
+    method: 'POST',
+    url: `/users/${userId}/telegram/bind`,
+    data: payload,
+  })
+}
+
+export async function unbindUserTelegram(userId: string) {
+  return request<{ bound: boolean }>({
+    method: 'DELETE',
+    url: `/users/${userId}/telegram/bind`,
   })
 }

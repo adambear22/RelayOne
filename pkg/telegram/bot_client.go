@@ -80,17 +80,28 @@ func (c *BotClient) send(chatID int64, text string, parseMode string) error {
 	}
 
 	endpoint := fmt.Sprintf("%s/bot%s/sendMessage", telegramAPIBase, url.PathEscape(c.token))
-	req, err := http.NewRequest(http.MethodPost, endpoint, bytes.NewReader(body))
+	endpointURL, err := url.Parse(endpoint)
+	if err != nil {
+		return err
+	}
+	if !strings.EqualFold(endpointURL.Scheme, "https") || !strings.EqualFold(endpointURL.Host, "api.telegram.org") {
+		return errors.New("invalid telegram api endpoint")
+	}
+
+	req, err := http.NewRequest(http.MethodPost, endpointURL.String(), bytes.NewReader(body))
 	if err != nil {
 		return err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
+	// #nosec G107,G704 -- endpoint host/scheme are validated above.
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	var apiResp telegramAPIResponse
 	if decodeErr := json.NewDecoder(resp.Body).Decode(&apiResp); decodeErr != nil {

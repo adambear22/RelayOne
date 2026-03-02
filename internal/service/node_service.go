@@ -451,8 +451,8 @@ func (s *NodeService) List(ctx context.Context, page, pageSize int, filter NodeL
 
 	repoFilter := repository.NodeListFilter{
 		Pagination: repository.Pagination{
-			Limit:  int32(pageSize),
-			Offset: int32((page - 1) * pageSize),
+			Limit:  clampIntToInt32(pageSize),
+			Offset: clampIntToInt32((page - 1) * pageSize),
 		},
 	}
 
@@ -1077,6 +1077,19 @@ func normalizeNodeListPage(page, pageSize int) (int, int) {
 		pageSize = nodeListMaxPageSize
 	}
 	return page, pageSize
+}
+
+func clampIntToInt32(v int) int32 {
+	const maxInt32 = int(^uint32(0) >> 1)
+	const minInt32 = -maxInt32 - 1
+
+	if v > maxInt32 {
+		return int32(maxInt32)
+	}
+	if v < minInt32 {
+		return int32(minInt32)
+	}
+	return int32(v)
 }
 
 func generateHexToken(byteLen int) (string, error) {

@@ -34,7 +34,7 @@ var (
 type CreateUserRequest struct {
 	OperatorID       string
 	Username         string
-	Password         string
+	PasswordPlain    string
 	Email            *string
 	Role             model.UserRole
 	Status           model.UserStatus
@@ -179,8 +179,8 @@ func (s *UserService) List(ctx context.Context, page, pageSize int, filters ...U
 		Status:  options.status,
 		Keyword: options.keyword,
 		Pagination: repository.Pagination{
-			Limit:  int32(normalizedPageSize),
-			Offset: int32((normalizedPage - 1) * normalizedPageSize),
+			Limit:  clampIntToInt32(normalizedPageSize),
+			Offset: clampIntToInt32((normalizedPage - 1) * normalizedPageSize),
 		},
 	}
 
@@ -199,11 +199,11 @@ func (s *UserService) List(ctx context.Context, page, pageSize int, filters ...U
 
 func (s *UserService) Create(ctx context.Context, req CreateUserRequest) (*model.User, error) {
 	username := strings.TrimSpace(req.Username)
-	if username == "" || req.Password == "" {
+	if username == "" || req.PasswordPlain == "" {
 		return nil, ErrInvalidUserInput
 	}
 
-	hashed, err := bcrypt.GenerateFromPassword([]byte(req.Password), 12)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(req.PasswordPlain), 12)
 	if err != nil {
 		return nil, err
 	}

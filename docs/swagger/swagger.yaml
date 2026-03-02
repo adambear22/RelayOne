@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  nodepass-hub_internal_api_response.Pagination:
+  response.Pagination:
     properties:
       page:
         type: integer
@@ -9,7 +9,7 @@ definitions:
       total:
         type: integer
     type: object
-  nodepass-hub_internal_api_response.Response:
+  response.Response:
     properties:
       code:
         type: integer
@@ -17,7 +17,7 @@ definitions:
       message:
         type: string
       pagination:
-        $ref: '#/definitions/nodepass-hub_internal_api_response.Pagination'
+        $ref: '#/definitions/response.Pagination'
     type: object
 info:
   contact: {}
@@ -42,23 +42,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: List
@@ -80,23 +80,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Create
@@ -124,23 +124,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Delete
@@ -167,23 +167,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: GetByID
@@ -210,23 +210,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Update
@@ -254,23 +254,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Toggle
@@ -287,23 +287,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       summary: ListActive
       tags:
       - announcement
@@ -324,23 +324,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: List
@@ -363,23 +363,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Logout
@@ -402,23 +402,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: ChangePassword
@@ -435,23 +435,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       summary: Refresh
       tags:
       - auth
@@ -472,23 +472,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: SSO
@@ -505,23 +505,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       summary: TelegramCallback
       tags:
       - auth
@@ -542,23 +542,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Webhook
@@ -581,23 +581,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: List
@@ -620,23 +620,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: BatchDelete
@@ -659,26 +659,65 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: BatchGenerate
+      tags:
+      - code
+  /api/v1/codes/redeem/history:
+    get:
+      consumes:
+      - application/json
+      description: Auto-generated endpoint documentation for ListRedeemHistory.
+      parameters:
+      - description: Bearer access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: ListRedeemHistory
       tags:
       - code
   /api/v1/codes/status:
@@ -698,23 +737,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: BatchUpdateStatus
@@ -737,23 +776,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Events
@@ -776,23 +815,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: List
@@ -814,23 +853,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Create
@@ -858,23 +897,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Delete
@@ -901,23 +940,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: GetByID
@@ -944,23 +983,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Update
@@ -988,23 +1027,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: ListNodes
@@ -1031,23 +1070,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: ReplaceNodes
@@ -1075,23 +1114,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: ReorderNodes
@@ -1114,23 +1153,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: List
@@ -1152,23 +1191,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Create
@@ -1196,23 +1235,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Delete
@@ -1239,23 +1278,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: GetByID
@@ -1282,23 +1321,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Update
@@ -1326,23 +1365,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: ListMembers
@@ -1369,23 +1408,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: AddMember
@@ -1418,23 +1457,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: DeleteMember
@@ -1466,23 +1505,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: UpdateMember
@@ -1505,23 +1544,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: List
@@ -1543,23 +1582,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Create
@@ -1587,23 +1626,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Delete
@@ -1630,23 +1669,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: GetByID
@@ -1673,23 +1712,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Update
@@ -1717,23 +1756,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: ListDeployLogs
@@ -1756,23 +1795,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       summary: GenerateInstallScript
       tags:
       - node
@@ -1798,23 +1837,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: TestTCPConnectivity
@@ -1837,23 +1876,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: List
@@ -1875,23 +1914,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Create
@@ -1919,23 +1958,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Delete
@@ -1962,23 +2001,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: GetByID
@@ -2005,23 +2044,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Update
@@ -2049,23 +2088,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: GetInstanceInfo
@@ -2093,23 +2132,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Restart
@@ -2137,23 +2176,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Start
@@ -2181,23 +2220,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Stop
@@ -2225,23 +2264,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Sync
@@ -2264,23 +2303,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: BatchDelete
@@ -2297,23 +2336,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       summary: GetConfig
       tags:
       - system
@@ -2333,23 +2372,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: UpdateConfig
@@ -2372,23 +2411,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: QueryLogs
@@ -2411,23 +2450,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: QueryDaily
@@ -2450,23 +2489,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: QueryMonthly
@@ -2489,23 +2528,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Overview
@@ -2533,23 +2572,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: ResetUserQuota
@@ -2577,23 +2616,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: QueryRuleStats
@@ -2616,23 +2655,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: QueryStats
@@ -2655,23 +2694,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: BatchSyncQuota
@@ -2694,23 +2733,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: List
@@ -2732,23 +2771,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Create
@@ -2776,23 +2815,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: GetByID
@@ -2819,23 +2858,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Update
@@ -2863,23 +2902,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: SetStatus
@@ -2907,23 +2946,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: UnbindTelegram
@@ -2950,23 +2989,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: BindTelegram
@@ -2989,23 +3028,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Me
@@ -3028,23 +3067,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: ListLevels
@@ -3066,23 +3105,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: CreateLevel
@@ -3110,23 +3149,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: DeleteLevel
@@ -3153,23 +3192,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: GetLevel
@@ -3196,23 +3235,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: UpdateLevel
@@ -3235,23 +3274,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: Me
@@ -3279,23 +3318,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: UpgradeUser
@@ -3312,23 +3351,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/nodepass-hub_internal_api_response.Response'
+            $ref: '#/definitions/response.Response'
       summary: Agent
       tags:
       - websocket

@@ -31,9 +31,29 @@
     }
   }
 
+  # Monitoring (optional)
+  handle /grafana* {
+    reverse_proxy nodepass-grafana:3000
+  }
+
+  handle_path /prometheus* {
+    reverse_proxy nodepass-prometheus:9090
+  }
+
+  handle_path /alertmanager* {
+    reverse_proxy nodepass-alertmanager:9093
+  }
+
   # 前端
   handle {
     reverse_proxy frontend:8080
+  }
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    X-Frame-Options "DENY"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "strict-origin-when-cross-origin"
   }
 
   encode gzip zstd

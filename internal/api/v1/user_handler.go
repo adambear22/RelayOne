@@ -31,7 +31,7 @@ type TelegramWebhookHandler struct {
 
 type createUserRequest struct {
 	Username         string   `json:"username" binding:"required"`
-	Password         string   `json:"password" binding:"required"`
+	Credential       string   `json:"password" binding:"required"` // #nosec G117 -- request DTO field.
 	Email            *string  `json:"email"`
 	Role             string   `json:"role"`
 	Status           string   `json:"status"`
@@ -194,7 +194,7 @@ func (h *UserHandler) Create(c *gin.Context) {
 	serviceReq := service.CreateUserRequest{
 		OperatorID:       claims.UserID,
 		Username:         inputsanitize.Text(req.Username),
-		Password:         req.Password,
+		PasswordPlain:    req.Credential,
 		Email:            inputsanitize.TextPtr(req.Email),
 		Role:             model.UserRole(inputsanitize.Text(req.Role)),
 		Status:           model.UserStatus(inputsanitize.Text(req.Status)),

@@ -16,7 +16,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	_ "net/http/pprof"
+	"net/http/pprof"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -36,6 +36,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/viper"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -48,10 +49,12 @@ import (
 	v1 "nodepass-hub/internal/api/v1"
 	"nodepass-hub/internal/event"
 	hubpkg "nodepass-hub/internal/hub"
+	"nodepass-hub/internal/metrics"
 	"nodepass-hub/internal/model"
 	"nodepass-hub/internal/repository"
 	"nodepass-hub/internal/repository/postgres"
 	"nodepass-hub/internal/scheduler"
+	schedulerjobs "nodepass-hub/internal/scheduler/jobs"
 	"nodepass-hub/internal/service"
 	"nodepass-hub/internal/sse"
 	systemlog "nodepass-hub/pkg/logger"
@@ -80,6 +83,8 @@ type Config struct {
 	Security struct {
 		AgentHMACSecret     string `mapstructure:"agent_hmac_secret"`
 		AgentHMACSecretFile string `mapstructure:"agent_hmac_secret_file"`
+		InternalToken       string `mapstructure:"internal_token"`
+		InternalTokenFile   string `mapstructure:"internal_token_file"`
 	} `mapstructure:"security"`
 	CORS struct {
 		AllowOrigins []string `mapstructure:"allow_origins"`
@@ -102,13 +107,15 @@ func main() {
 			os.Exit(runHealthcheck())
 		case "migrate":
 			if err := runMigrateCommand(); err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
+				// #nosec G705 -- CLI output only; control characters are stripped.
+				fmt.Fprintln(os.Stderr, sanitizeCLIError(err))
 				os.Exit(1)
 			}
 			return
 		case "create-admin":
 			if err := runCreateAdminCommand(os.Args[2:]); err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
+				// #nosec G705 -- CLI output only; control characters are stripped.
+				fmt.Fprintln(os.Stderr, sanitizeCLIError(err))
 				os.Exit(1)
 			}
 			return
@@ -193,17 +200,27 @@ func main() {
 		logger.Warn("load system config failed", zap.Error(err))
 	}
 
-	vipExpiryJob := scheduler.NewVIPExpiryJob(vipSvc, logger)
-	if err := vipExpiryJob.Start(); err != nil {
-		logger.Fatal("start vip expiry job failed", zap.Error(err))
-	}
-	defer vipExpiryJob.Stop()
+	trafficJob := schedulerjobs.NewTrafficJob(trafficSvc, policySvc, notificationSvc, logger)
+	vipJob := schedulerjobs.NewVIPJob(vipSvc, logger)
+	policyJob := schedulerjobs.NewPolicyJob(policySvc, logger)
+	nodeJob := schedulerjobs.NewNodeJob(dbPool, hub, nodeSvc, logger)
+	ruleJob := schedulerjobs.NewRuleJob(dbPool, ruleSvc, notificationSvc, logger)
 
-	policyJob := scheduler.NewPolicyJob(policySvc, logger)
-	if err := policyJob.Start(); err != nil {
-		logger.Fatal("start policy job failed", zap.Error(err))
-	}
-	defer policyJob.Stop()
+	cronRunner := scheduler.NewScheduler(scheduler.Deps{
+		TrafficJob: trafficJob,
+		VIPJob:     vipJob,
+		PolicyJob:  policyJob,
+		NodeJob:    nodeJob,
+		RuleJob:    ruleJob,
+	}, logger)
+	cronRunner.Start()
+	defer func() {
+		stopCtx := cronRunner.Stop()
+		select {
+		case <-stopCtx.Done():
+		case <-time.After(2 * time.Second):
+		}
+	}()
 
 	router := gin.New()
 	router.Use(gin.Recovery())
@@ -233,8 +250,12 @@ func main() {
 	router.GET("/api/v1/health", healthHandler)
 	router.GET("/api/v1/health/ready", readyHandler)
 
+	internalMetrics := router.Group("/internal")
+	internalMetrics.Use(middleware.InternalTokenAuth(cfg.Security.InternalToken))
+	internalMetrics.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
 	if isDebugMode && cfg.Debug.PprofEnabled {
-		router.Any("/debug/pprof/*path", gin.WrapH(http.DefaultServeMux))
+		registerPprofRoutes(router)
 		logger.Info("pprof endpoint enabled", zap.String("path", "/debug/pprof/"))
 	}
 	if shouldEnableSwaggerDocs(cfg.App.Env) {
@@ -261,6 +282,9 @@ func main() {
 	v1.RegisterWSRoutes(router, hub, cfg.Security.AgentHMACSecret)
 	api.RegisterExternalRoutes(router, dbPool, userSvc, vipSvc, ruleSvc, auditRepo, logger)
 	api.RegisterInternalRoutes(router, nodeSvc, trafficSvc, policySvc, cfg.Security.AgentHMACSecret)
+
+	stopMetricsCollector := startMetricsCollector(dbPool, hub, sseHub, logger)
+	defer stopMetricsCollector()
 
 	srv := &http.Server{
 		Addr:         fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port),
@@ -323,12 +347,15 @@ func loadConfig() (Config, error) {
 	v.SetDefault("server.read_timeout", "10s")
 	v.SetDefault("server.write_timeout", "15s")
 	v.SetDefault("server.shutdown_timeout", "10s")
+	v.SetDefault("database.url", "")
 	v.SetDefault("database.max_conns", 10)
 	v.SetDefault("database.ping_timeout", "3s")
 	v.SetDefault("log.level", "info")
 	v.SetDefault("log.encoding", "json")
 	v.SetDefault("security.agent_hmac_secret", "")
 	v.SetDefault("security.agent_hmac_secret_file", "")
+	v.SetDefault("security.internal_token", "")
+	v.SetDefault("security.internal_token_file", "")
 	v.SetDefault("cors.allow_origins", []string{"http://localhost:5173"})
 	v.SetDefault("debug.pprof_enabled", false)
 
@@ -345,11 +372,20 @@ func loadConfig() (Config, error) {
 	}
 
 	if strings.TrimSpace(cfg.Security.AgentHMACSecret) == "" && strings.TrimSpace(cfg.Security.AgentHMACSecretFile) != "" {
+		// #nosec G304 -- path is provided by operator config.
 		raw, err := os.ReadFile(strings.TrimSpace(cfg.Security.AgentHMACSecretFile))
 		if err != nil {
 			return Config{}, fmt.Errorf("read security.agent_hmac_secret_file failed: %w", err)
 		}
 		cfg.Security.AgentHMACSecret = strings.TrimSpace(string(raw))
+	}
+	if strings.TrimSpace(cfg.Security.InternalToken) == "" && strings.TrimSpace(cfg.Security.InternalTokenFile) != "" {
+		// #nosec G304 -- path is provided by operator config.
+		raw, err := os.ReadFile(strings.TrimSpace(cfg.Security.InternalTokenFile))
+		if err != nil {
+			return Config{}, fmt.Errorf("read security.internal_token_file failed: %w", err)
+		}
+		cfg.Security.InternalToken = strings.TrimSpace(string(raw))
 	}
 
 	if cfg.Database.URL == "" {
@@ -410,7 +446,12 @@ func newDBPool(ctx context.Context, cfg Config) (*pgxpool.Pool, error) {
 		return nil, fmt.Errorf("parse database.url failed: %w", err)
 	}
 
-	poolCfg.MaxConns = int32(cfg.Database.MaxConns)
+	const maxInt32 = int(^uint32(0) >> 1)
+	if cfg.Database.MaxConns > maxInt32 {
+		return nil, fmt.Errorf("database.max_conns must be <= %d", maxInt32)
+	}
+
+	poolCfg.MaxConns = int32(cfg.Database.MaxConns) // #nosec G115 -- validated upper bound above.
 
 	pool, err := pgxpool.NewWithConfig(ctx, poolCfg)
 	if err != nil {
@@ -451,6 +492,22 @@ func buildCORSMiddleware(cfg Config) gin.HandlerFunc {
 	})
 }
 
+func registerPprofRoutes(router *gin.Engine) {
+	pprofGroup := router.Group("/debug/pprof")
+	pprofGroup.GET("/", gin.WrapF(pprof.Index))
+	pprofGroup.GET("/cmdline", gin.WrapF(pprof.Cmdline))
+	pprofGroup.GET("/profile", gin.WrapF(pprof.Profile))
+	pprofGroup.GET("/symbol", gin.WrapF(pprof.Symbol))
+	pprofGroup.POST("/symbol", gin.WrapF(pprof.Symbol))
+	pprofGroup.GET("/trace", gin.WrapF(pprof.Trace))
+	pprofGroup.GET("/allocs", gin.WrapH(pprof.Handler("allocs")))
+	pprofGroup.GET("/block", gin.WrapH(pprof.Handler("block")))
+	pprofGroup.GET("/goroutine", gin.WrapH(pprof.Handler("goroutine")))
+	pprofGroup.GET("/heap", gin.WrapH(pprof.Handler("heap")))
+	pprofGroup.GET("/mutex", gin.WrapH(pprof.Handler("mutex")))
+	pprofGroup.GET("/threadcreate", gin.WrapH(pprof.Handler("threadcreate")))
+}
+
 func shouldEnableSwaggerDocs(env string) bool {
 	switch strings.ToLower(strings.TrimSpace(env)) {
 	case "development", "staging":
@@ -458,6 +515,111 @@ func shouldEnableSwaggerDocs(env string) bool {
 	default:
 		return false
 	}
+}
+
+func startMetricsCollector(
+	pool *pgxpool.Pool,
+	hub *hubpkg.Hub,
+	sseHub *sse.SSEHub,
+	logger *zap.Logger,
+) func() {
+	if logger == nil {
+		logger = zap.NewNop()
+	}
+
+	stopCh := make(chan struct{})
+
+	collect := func() {
+		if hub != nil {
+			metrics.SetAgentConnections(hub.ConnectedCount())
+		}
+		if sseHub != nil {
+			metrics.SetSSEClients(sseHub.ConnectedCount())
+		}
+		if pool != nil {
+			updateRuleStatusMetrics(pool, logger)
+			updateOverlimitUsersMetric(pool, logger)
+		}
+	}
+
+	collect()
+
+	go func() {
+		ticker := time.NewTicker(30 * time.Second)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-stopCh:
+				return
+			case <-ticker.C:
+				collect()
+			}
+		}
+	}()
+
+	return func() {
+		close(stopCh)
+	}
+}
+
+func updateRuleStatusMetrics(pool *pgxpool.Pool, logger *zap.Logger) {
+	if pool == nil {
+		return
+	}
+
+	metrics.SetActiveRuleCount("running", 0)
+	metrics.SetActiveRuleCount("paused", 0)
+	metrics.SetActiveRuleCount("stopped", 0)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	rows, err := pool.Query(
+		ctx,
+		`SELECT status, COUNT(*)
+		   FROM forwarding_rules
+		  GROUP BY status`,
+	)
+	if err != nil {
+		logger.Warn("collect rule status metrics failed", zap.Error(err))
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var status string
+		var total int64
+		if scanErr := rows.Scan(&status, &total); scanErr != nil {
+			logger.Warn("scan rule status metrics failed", zap.Error(scanErr))
+			return
+		}
+		metrics.SetActiveRuleCount(status, total)
+	}
+	if err := rows.Err(); err != nil {
+		logger.Warn("iterate rule status metrics failed", zap.Error(err))
+	}
+}
+
+func updateOverlimitUsersMetric(pool *pgxpool.Pool, logger *zap.Logger) {
+	if pool == nil {
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var total int64
+	if err := pool.QueryRow(
+		ctx,
+		`SELECT COUNT(*)
+		   FROM users
+		  WHERE status = 'over_limit'`,
+	).Scan(&total); err != nil {
+		logger.Warn("collect overlimit user metric failed", zap.Error(err))
+		return
+	}
+	metrics.SetOverlimitUsers(total)
 }
 
 func registerQuotaExceededSubscriber(
@@ -585,6 +747,7 @@ func loadRSAPrivateKey() (*rsa.PrivateKey, error) {
 	if pem == "" {
 		path := strings.TrimSpace(os.Getenv("NODEPASS_JWT_PRIVATE_KEY_FILE"))
 		if path != "" {
+			// #nosec G304,G703 -- path is provided by operator environment variable.
 			raw, err := os.ReadFile(path)
 			if err != nil {
 				return nil, err
@@ -613,39 +776,48 @@ func registerNotificationSubscribers(
 	bus.Subscribe(event.EventUserQuotaExceeded, func(payload any) {
 		quota, ok := normalizeQuotaPayload(payload)
 		if !ok {
+			logger.Debug("skip quota notification: invalid payload")
 			return
 		}
 
-		_ = notificationSvc.SendToUser(context.Background(), quota.UserID, service.NotificationQuotaExceeded, map[string]string{
+		if err := notificationSvc.SendToUser(context.Background(), quota.UserID, service.NotificationQuotaExceeded, map[string]string{
 			"traffic_used":  fmt.Sprintf("%d", quota.TrafficUsed),
 			"traffic_quota": fmt.Sprintf("%d", quota.TrafficQuota),
-		})
+		}); err != nil {
+			logger.Warn("send quota exceeded notification failed", zap.String("user_id", quota.UserID), zap.Error(err))
+		}
 	})
 
 	bus.Subscribe(event.EventUserVIPExpired, func(payload any) {
 		vipPayload, ok := normalizeVIPExpiredPayload(payload)
 		if !ok || strings.TrimSpace(vipPayload.UserID) == "" {
+			logger.Debug("skip vip expired notification: invalid payload")
 			return
 		}
 
-		_ = notificationSvc.SendToUser(context.Background(), vipPayload.UserID, service.NotificationVIPWarning1D, map[string]string{
+		if err := notificationSvc.SendToUser(context.Background(), vipPayload.UserID, service.NotificationVIPWarning1D, map[string]string{
 			"days":       "0",
 			"expires_at": "已到期",
-		})
+		}); err != nil {
+			logger.Warn("send vip expired notification failed", zap.String("user_id", vipPayload.UserID), zap.Error(err))
+		}
 	})
 
 	bus.Subscribe(event.EventNodeOffline, func(payload any) {
 		nodePayload, ok := normalizeNodeOfflinePayload(payload)
 		if !ok || strings.TrimSpace(nodePayload.NodeID) == "" {
+			logger.Debug("skip node offline notification: invalid payload")
 			return
 		}
 
-		_ = notificationSvc.SendToAdmins(context.Background(), service.NotificationNodeOffline, map[string]string{
+		if err := notificationSvc.SendToAdmins(context.Background(), service.NotificationNodeOffline, map[string]string{
 			"node_id":     nodePayload.NodeID,
 			"timestamp":   nodePayload.Timestamp.UTC().Format(time.RFC3339Nano),
 			"agent_id":    nodePayload.NodeID,
 			"occurred_at": nodePayload.Timestamp.UTC().Format(time.RFC3339Nano),
-		})
+		}); err != nil {
+			logger.Warn("send node offline notification failed", zap.String("node_id", nodePayload.NodeID), zap.Error(err))
+		}
 	})
 }
 
@@ -724,7 +896,9 @@ func runMigrateCommand() error {
 		if normalizeErr != nil {
 			return fmt.Errorf("run migrations failed: %w", err)
 		}
-		defer os.RemoveAll(normalizedDir)
+		defer func() {
+			_ = os.RemoveAll(normalizedDir)
+		}()
 
 		normalizedSource := "file://" + normalizedDir
 		if retryErr := runMigrateUp(normalizedSource, cfg.Database.URL); retryErr != nil {
@@ -797,17 +971,23 @@ func normalizeMigrationDir(srcDir string) (string, error) {
 }
 
 func copyFile(srcPath, dstPath string) error {
+	// #nosec G304 -- source path is derived from migration directory listing.
 	src, err := os.Open(srcPath)
 	if err != nil {
 		return err
 	}
-	defer src.Close()
+	defer func() {
+		_ = src.Close()
+	}()
 
+	// #nosec G304 -- destination path is created in a temporary directory under our control.
 	dst, err := os.Create(dstPath)
 	if err != nil {
 		return err
 	}
-	defer dst.Close()
+	defer func() {
+		_ = dst.Close()
+	}()
 
 	if _, err := io.Copy(dst, src); err != nil {
 		return err
@@ -939,10 +1119,22 @@ func runHealthcheck() int {
 	if err != nil {
 		return 1
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return 1
 	}
 	return 0
+}
+
+func sanitizeCLIError(err error) string {
+	if err == nil {
+		return ""
+	}
+
+	text := strings.ReplaceAll(err.Error(), "\n", " ")
+	text = strings.ReplaceAll(text, "\r", " ")
+	return strings.TrimSpace(text)
 }

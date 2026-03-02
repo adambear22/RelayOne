@@ -9,6 +9,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
 
+	"nodepass-hub/internal/metrics"
 	"nodepass-hub/internal/model"
 )
 
@@ -75,11 +76,16 @@ func (s *PolicyService) EnforcePolicy(ctx context.Context, userID string, policy
 }
 
 func (s *PolicyService) BatchPauseOverlimitUsers(ctx context.Context) error {
+	_, err := s.PauseOverlimitUsers(ctx)
+	return err
+}
+
+func (s *PolicyService) PauseOverlimitUsers(ctx context.Context) ([]uuid.UUID, error) {
 	if s.pool == nil {
-		return errors.New("database pool is nil")
+		return nil, errors.New("database pool is nil")
 	}
 	if s.ruleService == nil {
-		return errors.New("rule service is nil")
+		return nil, errors.New("rule service is nil")
 	}
 
 	rows, err := s.pool.Query(
@@ -94,15 +100,16 @@ func (s *PolicyService) BatchPauseOverlimitUsers(ctx context.Context) error {
 		model.UserStatusNormal,
 	)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer rows.Close()
 
+	paused := make([]uuid.UUID, 0, 16)
 	var firstErr error
 	for rows.Next() {
 		var userID uuid.UUID
 		if err := rows.Scan(&userID); err != nil {
-			return err
+			return nil, err
 		}
 
 		if err := s.ruleService.PauseAllUserRules(ctx, userID.String()); err != nil {
@@ -114,10 +121,117 @@ func (s *PolicyService) BatchPauseOverlimitUsers(ctx context.Context) error {
 				zap.Error(err),
 			)
 		}
+
+		if _, err := s.pool.Exec(
+			ctx,
+			`UPDATE users
+			    SET status = $2,
+			        updated_at = NOW()
+			  WHERE id = $1`,
+			userID,
+			model.UserStatusOverLimit,
+		); err != nil {
+			if firstErr == nil {
+				firstErr = err
+			}
+			s.logger.Warn("set user status over_limit failed",
+				zap.String("user_id", userID.String()),
+				zap.Error(err),
+			)
+			continue
+		}
+
+		paused = append(paused, userID)
 	}
 	if err := rows.Err(); err != nil {
-		return err
+		return nil, err
+	}
+	s.refreshOverlimitUsersMetric(ctx)
+
+	return paused, firstErr
+}
+
+func (s *PolicyService) ResumeAllOverlimitUsers(ctx context.Context) ([]uuid.UUID, error) {
+	if s.pool == nil {
+		return nil, errors.New("database pool is nil")
+	}
+	if s.ruleService == nil {
+		return nil, errors.New("rule service is nil")
 	}
 
-	return firstErr
+	rows, err := s.pool.Query(
+		ctx,
+		`SELECT id
+		   FROM users
+		  WHERE status = $1
+		    AND traffic_used < traffic_quota`,
+		model.UserStatusOverLimit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	resumed := make([]uuid.UUID, 0, 16)
+	var firstErr error
+	for rows.Next() {
+		var userID uuid.UUID
+		if err := rows.Scan(&userID); err != nil {
+			return nil, err
+		}
+
+		if err := s.ruleService.ResumeAllUserRules(ctx, userID.String()); err != nil {
+			if firstErr == nil {
+				firstErr = err
+			}
+			s.logger.Warn("resume user rules failed",
+				zap.String("user_id", userID.String()),
+				zap.Error(err),
+			)
+		}
+
+		if _, err := s.pool.Exec(
+			ctx,
+			`UPDATE users
+			    SET status = $2,
+			        updated_at = NOW()
+			  WHERE id = $1`,
+			userID,
+			model.UserStatusNormal,
+		); err != nil {
+			if firstErr == nil {
+				firstErr = err
+			}
+			s.logger.Warn("set user status normal failed",
+				zap.String("user_id", userID.String()),
+				zap.Error(err),
+			)
+			continue
+		}
+
+		resumed = append(resumed, userID)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	s.refreshOverlimitUsersMetric(ctx)
+
+	return resumed, firstErr
+}
+
+func (s *PolicyService) refreshOverlimitUsersMetric(ctx context.Context) {
+	if s.pool == nil {
+		return
+	}
+
+	var total int64
+	if err := s.pool.QueryRow(
+		ctx,
+		`SELECT COUNT(*) FROM users WHERE status = $1`,
+		model.UserStatusOverLimit,
+	).Scan(&total); err != nil {
+		return
+	}
+
+	metrics.SetOverlimitUsers(total)
 }

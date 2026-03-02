@@ -372,6 +372,65 @@ func (s *BenefitCodeService) List(
 	return items, total, nil
 }
 
+func (s *BenefitCodeService) ListRedeemHistory(
+	ctx context.Context,
+	userID string,
+	page, pageSize int,
+) ([]*model.BenefitCode, int64, error) {
+	if s.pool == nil {
+		return nil, 0, errors.New("database pool is nil")
+	}
+
+	uid, err := uuid.Parse(strings.TrimSpace(userID))
+	if err != nil {
+		return nil, 0, ErrInvalidUserID
+	}
+
+	page, pageSize = normalizeBenefitCodeListPage(page, pageSize)
+	rows, err := s.pool.Query(
+		ctx,
+		`SELECT `+benefitCodeColumns+`
+		   FROM benefit_codes
+		  WHERE is_used = TRUE
+		    AND used_by = $1
+		  ORDER BY used_at DESC NULLS LAST, created_at DESC
+		  LIMIT $2 OFFSET $3`,
+		uid,
+		pageSize,
+		(page-1)*pageSize,
+	)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+
+	items := make([]*model.BenefitCode, 0, pageSize)
+	for rows.Next() {
+		item, scanErr := scanBenefitCode(rows)
+		if scanErr != nil {
+			return nil, 0, scanErr
+		}
+		items = append(items, item)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, 0, err
+	}
+
+	var total int64
+	if err := s.pool.QueryRow(
+		ctx,
+		`SELECT COUNT(*)
+		   FROM benefit_codes
+		  WHERE is_used = TRUE
+		    AND used_by = $1`,
+		uid,
+	).Scan(&total); err != nil {
+		return nil, 0, err
+	}
+
+	return items, total, nil
+}
+
 func (s *BenefitCodeService) findByCodeForUpdateTx(ctx context.Context, tx pgx.Tx, code string) (*model.BenefitCode, error) {
 	item, err := scanBenefitCode(tx.QueryRow(
 		ctx,

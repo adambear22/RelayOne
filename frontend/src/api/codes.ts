@@ -11,6 +11,22 @@ export interface ListCodesParams {
   keyword?: string
 }
 
+export interface ListRedeemHistoryParams {
+  page?: number
+  page_size?: number
+}
+
+export interface RedeemHistoryItem {
+  id: string
+  code: string
+  vip_level: number
+  duration_days: number
+  used_at?: string
+  expires_at?: string
+  source?: string
+  remark?: string
+}
+
 export interface BatchGenerateCodesPayload {
   count: number
   vip_level: number
@@ -33,6 +49,14 @@ export async function listCodes(params?: ListCodesParams): Promise<PaginatedResu
   return requestPaginated<BenefitCode[]>({
     method: 'GET',
     url: '/codes',
+    params,
+  })
+}
+
+export async function listRedeemHistory(params?: ListRedeemHistoryParams): Promise<PaginatedResult<RedeemHistoryItem[]>> {
+  return requestPaginated<RedeemHistoryItem[]>({
+    method: 'GET',
+    url: '/codes/redeem/history',
     params,
   })
 }

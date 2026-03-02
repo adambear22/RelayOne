@@ -1,112 +1,137 @@
 package main
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 
-	agentconfig "nodepass-agent/config"
+	"nodepass-agent/internal/config"
+	"nodepass-agent/internal/process"
 )
 
-func TestLoadHubConfigFromConfig(t *testing.T) {
-	cfg := agentconfig.DefaultConfig("")
-	cfg.Agent.PanelURL = "wss://panel.example/ws/agent"
-	cfg.Agent.AgentID = "agent-1"
-	cfg.Agent.DeployToken = "token-1"
+func TestEnsureCredentialsUsesCachedWhenValid(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api/v1/info" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer srv.Close()
 
-	resetHubEnv(t)
-	hubCfg, err := loadHubConfig(cfg)
+	conf := &config.AgentConf{MasterAddr: srv.URL, APIKey: "k"}
+	creds, err := ensureCredentials(t.TempDir(), conf, nil)
 	if err != nil {
-		t.Fatalf("loadHubConfig returned error: %v", err)
+		t.Fatalf("ensureCredentials: %v", err)
 	}
-	if hubCfg.HubWSURL != cfg.Agent.PanelURL {
-		t.Fatalf("unexpected HubWSURL: %q", hubCfg.HubWSURL)
-	}
-	if hubCfg.AgentID != cfg.Agent.AgentID {
-		t.Fatalf("unexpected AgentID: %q", hubCfg.AgentID)
-	}
-	if hubCfg.AgentToken != cfg.Agent.DeployToken {
-		t.Fatalf("unexpected AgentToken: %q", hubCfg.AgentToken)
+	if creds.MasterAddr != srv.URL {
+		t.Fatalf("unexpected master addr: %s", creds.MasterAddr)
 	}
 }
 
-func TestLoadHubConfigEnvOverridesConfig(t *testing.T) {
-	cfg := agentconfig.DefaultConfig("")
-	cfg.Agent.PanelURL = "wss://config/ws"
-	cfg.Agent.AgentID = "config-agent"
-	cfg.Agent.DeployToken = "config-token"
-
-	setenv(t, "HUB_WS_URL", "wss://env/ws")
-	setenv(t, "AGENT_ID", "env-agent")
-	setenv(t, "AGENT_TOKEN", "env-token")
-
-	hubCfg, err := loadHubConfig(cfg)
-	if err != nil {
-		t.Fatalf("loadHubConfig returned error: %v", err)
-	}
-	if hubCfg.HubWSURL != "wss://env/ws" {
-		t.Fatalf("unexpected HubWSURL: %q", hubCfg.HubWSURL)
-	}
-	if hubCfg.AgentID != "env-agent" {
-		t.Fatalf("unexpected AgentID: %q", hubCfg.AgentID)
-	}
-	if hubCfg.AgentToken != "env-token" {
-		t.Fatalf("unexpected AgentToken: %q", hubCfg.AgentToken)
-	}
-}
-
-func TestLoadHubConfigRequiresValues(t *testing.T) {
-	cfg := agentconfig.DefaultConfig("")
-	resetHubEnv(t)
-
-	_, err := loadHubConfig(cfg)
+func TestEnsureCredentialsFailsWithoutManagerWhenMissing(t *testing.T) {
+	_, err := ensureCredentials(t.TempDir(), &config.AgentConf{}, nil)
 	if err == nil {
-		t.Fatalf("expected error when required values are missing")
+		t.Fatalf("expected error when manager is nil and credentials are missing")
 	}
 }
 
-func TestMergeConfigFromEnv(t *testing.T) {
-	cfg := agentconfig.DefaultConfig("")
-	resetHubEnv(t)
-
-	setenv(t, "HUB_WS_URL", "wss://panel.example/ws")
-	setenv(t, "AGENT_ID", "agent-xyz")
-	setenv(t, "AGENT_TOKEN", "tok-xyz")
-
-	changed := mergeConfigFromEnv(cfg)
-	if !changed {
-		t.Fatalf("expected config to be changed")
-	}
-	if cfg.Agent.PanelURL != "wss://panel.example/ws" {
-		t.Fatalf("unexpected panel_url: %q", cfg.Agent.PanelURL)
-	}
-	if cfg.Agent.AgentID != "agent-xyz" {
-		t.Fatalf("unexpected agent_id: %q", cfg.Agent.AgentID)
-	}
-	if cfg.Agent.DeployToken != "tok-xyz" {
-		t.Fatalf("unexpected deploy_token: %q", cfg.Agent.DeployToken)
+func TestEnsureCredentialsWaitsForManager(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("shell script helper is unix-only")
 	}
 
-	changed = mergeConfigFromEnv(cfg)
-	if changed {
-		t.Fatalf("expected second merge to be no-op")
+	workDir := t.TempDir()
+	binPath := filepath.Join(workDir, "nodepass")
+	script := "#!/bin/sh\n" +
+		"echo 'MASTER_ADDR=127.0.0.1:19090'\n" +
+		"echo 'API_KEY=test-key'\n" +
+		"while true; do sleep 1; done\n"
+	if err := os.WriteFile(binPath, []byte(script), 0o755); err != nil {
+		t.Fatalf("write helper binary: %v", err)
+	}
+
+	manager := process.NewProcessManager(binPath, workDir)
+	if err := manager.Start(); err != nil {
+		t.Fatalf("start manager: %v", err)
+	}
+	defer manager.Stop()
+
+	conf := &config.AgentConf{}
+	creds, err := ensureCredentials(workDir, conf, manager)
+	if err != nil {
+		t.Fatalf("ensureCredentials: %v", err)
+	}
+	if creds.APIKey != "test-key" {
+		t.Fatalf("unexpected api key: %s", creds.APIKey)
+	}
+
+	loaded, err := config.Load(workDir)
+	if err != nil {
+		t.Fatalf("load saved conf: %v", err)
+	}
+	if loaded.APIKey != "test-key" {
+		t.Fatalf("expected persisted api key")
 	}
 }
 
-func resetHubEnv(t *testing.T) {
+func TestResolveRuntimeConfigFallbackToLegacyFile(t *testing.T) {
+	clearEnvForConfig(t)
+
+	workDir := t.TempDir()
+	configPath := filepath.Join(workDir, "agent.conf")
+	content := strings.Join([]string{
+		"[agent]",
+		"panel_url = ws://127.0.0.1:8080/ws/agent",
+		"agent_id = agent-from-file",
+		"deploy_token = token-from-file",
+		"",
+	}, "\n")
+	if err := os.WriteFile(configPath, []byte(content), 0o600); err != nil {
+		t.Fatalf("write config: %v", err)
+	}
+
+	cfg, err := resolveRuntimeConfig(configPath, workDir)
+	if err != nil {
+		t.Fatalf("resolveRuntimeConfig: %v", err)
+	}
+	if cfg.HubURL != "ws://127.0.0.1:8080/ws/agent" {
+		t.Fatalf("unexpected hub url: %s", cfg.HubURL)
+	}
+	if cfg.AgentID != "agent-from-file" {
+		t.Fatalf("unexpected agent id: %s", cfg.AgentID)
+	}
+	if cfg.InternalToken != "token-from-file" {
+		t.Fatalf("unexpected token")
+	}
+}
+
+func clearEnvForConfig(t *testing.T) {
 	t.Helper()
-	for _, key := range []string{"HUB_WS_URL", "AGENT_ID", "AGENT_TOKEN"} {
-		if err := os.Unsetenv(key); err != nil {
-			t.Fatalf("Unsetenv %s failed: %v", key, err)
+	keys := []string{
+		"HUB_URL",
+		"HUB_WS_URL",
+		"AGENT_ID",
+		"INTERNAL_TOKEN",
+		"AGENT_TOKEN",
+		"WORK_DIR",
+		"LOG_LEVEL",
+		"METRICS_INTERVAL",
+		"TRAFFIC_INTERVAL",
+	}
+	for _, key := range keys {
+		prev, existed := os.LookupEnv(key)
+		_ = os.Unsetenv(key)
+		if existed {
+			envKey := key
+			value := prev
+			t.Cleanup(func() {
+				_ = os.Setenv(envKey, value)
+			})
 		}
 	}
-}
-
-func setenv(t *testing.T, key, value string) {
-	t.Helper()
-	if err := os.Setenv(key, value); err != nil {
-		t.Fatalf("Setenv %s failed: %v", key, err)
-	}
-	t.Cleanup(func() {
-		_ = os.Unsetenv(key)
-	})
 }
